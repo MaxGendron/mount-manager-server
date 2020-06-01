@@ -1,9 +1,9 @@
 {
-  "name": "wms-server",
+  "name": "mount-manager-server",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./app"
+    "start": "nodemon -e yaml,js,json app.js"
   },
   "dependencies": {
     "bcrypt": "^3.0.6",
@@ -17,6 +17,7 @@
     "mongodb": "^3.1.13",
     "morgan": "~1.9.0",
     "nodemon": "^1.18.10",
-    "pug": "^2.0.4"
+    "swagger-jsdoc": "^4.0.0",
+    "swagger-ui-express": "^4.1.4"
   }
 }

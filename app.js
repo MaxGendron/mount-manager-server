@@ -1,15 +1,45 @@
 let express = require('express');
-let path = require('path');
-let cookieParser = require('cookie-parser');
-let logger = require('morgan');
 let app = express();
-var http = require('http');
-let cors = require('cors');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const http = require('http');
+const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
 require('dotenv').config();
-
 const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.MONGOBD_STRING;
+const port = process.env.PORT || '3000';
+
+//Swagger
+const swaggerJSDocOptions = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'ExpressJS-Starter-Kit', 
+        version: '1.0.0',
+        description: 'Starter kit of an express-js app'
+      },
+      servers: [
+        {url: `http://localhost:3000/api` }
+      ],
+      security: [
+          {ApiKeyAuth: []}
+      ]
+    },
+    // Path to the API docs
+    apis: ['./swagger/*', './routes/*'],
+};
+const swaggerSpec = swaggerJSDoc(swaggerJSDocOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+});
+
 const corsOptions = {
+    //Check if the origin is in the list of cors defined in the
+    //env, if so let it pass otherwise return a error
     origin: function (origin, callback) {
         if (process.env.CORS_ORIGIN.indexOf(origin) !== -1) {
             callback(null, true)
@@ -30,9 +60,10 @@ MongoClient.connect(uri, {
         console.log(err);
         return;
     }
-    app.locals.db = client.db('WMS');
+    app.locals.db = client.db('DBNAME');
     dbClient = client;
-    var port = normalizePort(process.env.PORT || '3000');
+
+    //Set the port and listen to it
     app.set('port', port);
     var server = http.createServer(app);
     server.listen(port);
@@ -44,46 +75,28 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
 
 // Routes
-let appointmentRouter = require('./routes/appointment');
-let adminUserRouter = require('./routes/admin-user');
-let clientRouter = require('./routes/client');
-let employeeRouter = require('./routes/employee');
-
-app.use('/api/appointment', appointmentRouter);
-app.use('/api/adminUser', adminUserRouter);
-app.use('/api/client', clientRouter);
-app.use('/api/employee', employeeRouter);
+const basePath = '/api/';
+const userRoute = require('./routes/users');
+app.use(`${basePath}users` , userRoute);
 
 // Error Handler
 app.use(function(err, req, res, next) {
     if (err.route) {
-        console.log('Error when execution route "' + err.route + '".');
+        console.log(`Error when executing route ${err.route}.`);
     } else {
         console.log('An error as occurred.');
     }
+
     console.log(err);
+
     let statusCode = err.statusCode ? err.statusCode : 500;
     res.status(statusCode).send(err);
 });
 
+//Close the db connection on exit
 process.on('SIGINT', () => {
     dbClient.close();
     process.exit();
 });
-
-function normalizePort(val) {
-    var port = parseInt(val, 10);
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-    return false;
-}
