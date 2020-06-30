@@ -11,10 +11,13 @@ components:
           type: string
         username:
           type: string
+        email:
+          type: string
         password:
           type: string
       required:  
         - username
+        - email
         - password
     Error:
       description: Error returned from 4XX and 5XX error code.

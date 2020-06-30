@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken');
 let router = express.Router();
 let authUtil = require('../utils/auth-util');
 let errorUtil = require('../utils/error-util');
+let validatorUtil = require('../utils/validator-util');
 const _secret = process.env.JWT_SECRET;
 
 /**
@@ -23,7 +24,7 @@ const _secret = process.env.JWT_SECRET;
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: New User has been inserted.
+ *         description: New user has been inserted.
  *         content:
  *           application/json:
  *             schema:
@@ -39,58 +40,72 @@ const _secret = process.env.JWT_SECRET;
  */
 router.post('/', function (req, res, next) {
   const url = req.method + req.originalUrl;
-  //Verify input
-  if (!req.body.username) {
-    return next(errorUtil.BadRequest('Undefined parameter: username', url, 'UndefinedParameter'));
-  }
-  if (!req.body.password) {
-    return next(errorUtil.BadRequest('Undefined parameter: password', url, 'UndefinedParameter'));
-  }
-
   const db = req.app.locals.db;
   const username = req.body.username;
   const password = req.body.password;
-  //Crypt the password
-  authUtil.cryptPassword(password, function (err, hash) {
+  const email = req.body.email;
+  
+  //Verify input
+  if (!username) {
+    return next(errorUtil.BadRequest('Undefined parameter: username', url, 'UndefinedParameter'));
+  }
+  if (!password) {
+    return next(errorUtil.BadRequest('Undefined parameter: password', url, 'UndefinedParameter'));
+  }
+  if (!email) {
+    return next(errorUtil.BadRequest('Undefined parameter: password', url, 'UndefinedParameter'));
+  }
+  if (!validatorUtil.validateEmail(email)) {
+    return next(errorUtil.BadRequest('Bad parameter: email', url, 'BadParameter'));
+  }
+
+  //Check if the user already exist, if so return error
+  //Sanity check, shouldn't happens since we're validating on the UI
+  db.collection('User').countDocuments({
+    '$or': [
+      {username: username},
+      {email: email}
+    ]
+  }, { limit: 1 }, function (err, count) {
     if (err) {
       err.url = url;
       return next(err);
     }
-    //Check if the user already exist, if so return error
-    db.collection('User').countDocuments({
-      username: username
-    }, { limit: 1 }, function (err, count) {
+    if (count > 0) {
+      return next(errorUtil.BadRequest('Cannot Insert the requested user, verify your information', url, 'CannotInsert'));
+    }
+
+    //Encrypt the password
+    authUtil.encryptPassword(password, function (err, hash) {
       if (err) {
         err.url = url;
         return next(err);
-      }
-      if (count > 0) {
-        return next(errorUtil.BadRequest('Cannot Insert the requested user, verify your information', url, 'CannotInsert'));
       }
 
       //If user don't exist, insert it
       db.collection('User').insertOne({
         username: username,
+        email: email,
         password: hash,
       }, function (err, doc) {
         if (err) {
           err.url = url;
           return next(err);
         }
-        
+
         //Sign a JWT token and return it with the found user
         jwt.sign({ username: username, _id: doc._id }, _secret, { algorithm: 'HS512', expiresIn: '24h', issuer: process.env.JWT_ISSUER },
-        function (err, token) {
-          if (err) {
-            err.url = url;
-            return next(err);
-          }
-          const user = {
-            username: username,
-            token: token
-          }
-          res.json({ user: user });
-        });
+          function (err, token) {
+            if (err) {
+              err.url = url;
+              return next(err);
+            }
+            const user = {
+              username: username,
+              token: token
+            }
+            res.json({ user: user });
+          });
       });
     });
   });
@@ -102,7 +117,7 @@ router.post('/', function (req, res, next) {
  * /users/validate:
  *   post:
  *     summary: Validate a User
- *     description: Validate that the given user is a user in the system.
+ *     description: Validate that the given username/password correspond to a user in the system.
  *     tags: [Users]
  *     produces:
  *        application/json
@@ -111,10 +126,17 @@ router.post('/', function (req, res, next) {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             properties:
+ *              username:
+ *               type: string
+ *              password:
+ *               type: string
+ *             required:  
+ *              - username
+ *              - password
  *     responses:
  *       200:
- *         description: User exist in the system.
+ *         description: The given username/password correspond to a user in the system.
  *         content:
  *           application/json:
  *             schema:
@@ -132,26 +154,33 @@ router.post('/', function (req, res, next) {
  */
 router.post('/validate', function (req, res, next) {
   const url = req.method + req.originalUrl;
-  //Verify input
-  if (!req.body.username) {
-    return next(errorUtil.BadRequest('Undefined parameter: username', url, 'UndefinedParameter'));
-  }
-  if (!req.body.password) {
-    return next(errorUtil.BadRequest('Undefined parameter: password', url, 'UndefinedParameter'));
-  }
-
   const db = req.app.locals.db;
   const username = req.body.username;
   const password = req.body.password;
+
+  //Verify input
+  if (!username) {
+    return next(errorUtil.BadRequest('Undefined parameter: username', url, 'UndefinedParameter'));
+  }
+  if (!password) {
+    return next(errorUtil.BadRequest('Undefined parameter: password', url, 'UndefinedParameter'));
+  }
+
   //Look for the associated doc in the DB
-  db.collection('User').findOne({ username: username }, function (err, doc) {
+  //Username can be the email or the username
+  db.collection('User').findOne({
+    '$or': [
+      {username: username},
+      {email: username}
+    ]
+  }, function (err, doc) {
     if (err) {
       err.url = url;
       return next(err);
     }
     //Return error if no doc found
     if (doc === null) {
-      return next(errorUtil.NotFound('No user found for username: ' + username, url));
+      return next(errorUtil.NotFound('No user found', url));
     } else {
       //Compare given password to the db one
       authUtil.comparePassword(password, doc.password, function (err, isValid) {
@@ -175,10 +204,62 @@ router.post('/validate', function (req, res, next) {
           });
         } else {
           //If not valid return notFound
-          return next(errorUtil.NotFound('No user found for username: ' + username, url));
+          return next(errorUtil.NotFound('No user found', url));
         }
       });
     }
+  });
+});
+
+/**
+ * @swagger
+ *
+ * /users/exist:
+ *   post:
+ *     summary: Validate if a user exist
+ *     description: Validate if a user exist by looking at the number of document returned by the query.
+ *     tags: [Users]
+ *     produces:
+ *        application/json
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             properties:
+ *               query:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: User exist or not in the system.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 exist:
+ *                   type: boolean
+ *       400:
+ *         $ref: '#/components/responses/400'
+ *       Default:
+ *         $ref: '#/components/responses/Default'
+ */
+router.post('/exist', function (req, res, next) {
+  const url = req.method + req.originalUrl;
+  const db = req.app.locals.db;
+  const query = req.body.query;
+
+  //Verify input
+  if (!query) {
+    return next(errorUtil.BadRequest('Undefined parameter: param'), url, 'UndefinedParameter');
+  }
+
+  db.collection('User').countDocuments(query, { limit: 1 }, function (err, count) {
+    if (err) {
+      err.url = url;
+      return next(err);
+    }
+
+    res.json({ exist: count > 0 });
   });
 });
 

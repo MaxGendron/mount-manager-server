@@ -16,9 +16,9 @@ const swaggerJSDocOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'ExpressJS-Starter-Kit',
+      title: 'Mount-Manager-Server',
       version: '1.0.0',
-      description: 'Starter kit of an express-js app'
+      description: 'Server API of the MountManager application'
     },
     servers: [
       { url: `http://localhost:3000/api` }
