@@ -34,3 +34,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    '400':
+      description: BadRequest
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: NotFound
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error' 

@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken');
 let router = express.Router();
 let authUtil = require('../utils/auth-util');
 let errorUtil = require('../utils/error-util');
+const _secret = process.env.JWT_SECRET;
 
 /**
  * @swagger
@@ -22,8 +23,18 @@ let errorUtil = require('../utils/error-util');
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: New user has been inserted.
- *       default:
+ *         description: New User has been inserted.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 username:
+ *                   type: string
+ *                 token:
+ *                   type: string
+ *       400:
+ *         $ref: '#/components/responses/400'
+ *       Default:
  *          $ref: '#/components/responses/Default'
  */
 router.post('/', function (req, res, next) {
@@ -66,7 +77,20 @@ router.post('/', function (req, res, next) {
           err.url = url;
           return next(err);
         }
-        res.sendStatus(200);
+        
+        //Sign a JWT token and return it with the found user
+        jwt.sign({ username: username, _id: doc._id }, _secret, { algorithm: 'HS512', expiresIn: '24h', issuer: process.env.JWT_ISSUER },
+        function (err, token) {
+          if (err) {
+            err.url = url;
+            return next(err);
+          }
+          const user = {
+            username: username,
+            token: token
+          }
+          res.json({ user: user });
+        });
       });
     });
   });
@@ -99,8 +123,12 @@ router.post('/', function (req, res, next) {
  *                   type: string
  *                 token:
  *                   type: string
- *       default:
- *          $ref: '#/components/responses/Default'
+ *       400:
+ *         $ref: '#/components/responses/400'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       Default:
+ *         $ref: '#/components/responses/Default'
  */
 router.post('/validate', function (req, res, next) {
   const url = req.method + req.originalUrl;
@@ -132,18 +160,23 @@ router.post('/validate', function (req, res, next) {
           return next(err);
         }
         //If password match, sign a JWT token and return it with the found user
-        const secret = process.env.JWT_SECRET;
-        jwt.sign({ username: username, _id: doc._id }, secret, { algorithm: 'HS512', expiresIn: '24h', issuer: process.env.JWT_ISSUER }, function (err, token) {
-          if (err) {
-            err.url = url;
-            return next(err);
-          }
-          const user = {
-            username: doc.username,
-            token: token
-          }
-          res.json({ user: user, isValid: isValid });
-        });
+        if (isValid) {
+          jwt.sign({ username: username, _id: doc._id }, _secret, { algorithm: 'HS512', expiresIn: '24h', issuer: process.env.JWT_ISSUER },
+          function (err, token) {
+            if (err) {
+              err.url = url;
+              return next(err);
+            }
+            const user = {
+              username: doc.username,
+              token: token
+            }
+            res.json({ user: user });
+          });
+        } else {
+          //If not valid return notFound
+          return next(errorUtil.NotFound('No user found for username: ' + username, url));
+        }
       });
     }
   });
