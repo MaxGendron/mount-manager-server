@@ -60,7 +60,7 @@ MongoClient.connect(uri, {
     console.log(err);
     return;
   }
-  app.locals.db = client.db('DBNAME');
+  app.locals.db = client.db('MountManager');
   dbClient = client;
 
   //Set the port and listen to it
