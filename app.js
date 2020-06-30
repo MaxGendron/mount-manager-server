@@ -30,8 +30,11 @@ const swaggerJSDocOptions = {
   // Path to the API docs
   apis: ['./swagger/*', './routes/*'],
 };
+var options = {
+  customCssUrl: 'http://localhost:3000/swaggerUICustom.css'
+};
 const swaggerSpec = swaggerJSDoc(swaggerJSDocOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, options));
 app.get('/api-docs.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
@@ -75,6 +78,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static('public'));
 
 // Routes
 const basePath = '/api/';
