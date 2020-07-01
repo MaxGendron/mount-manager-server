@@ -250,7 +250,7 @@ router.post('/exist', function (req, res, next) {
 
   //Verify input
   if (!query) {
-    return next(errorUtil.BadRequest('Undefined parameter: param'), url, 'UndefinedParameter');
+    return next(errorUtil.BadRequest('Undefined parameter: query'), url, 'UndefinedParameter');
   }
 
   db.collection('User').countDocuments(query, { limit: 1 }, function (err, count) {
