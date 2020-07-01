@@ -7,8 +7,6 @@ components:
   schemas:
     User:
       properties:
-        _id:
-          type: string
         username:
           type: string
         email:

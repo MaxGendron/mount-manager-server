@@ -3,7 +3,7 @@
 exports.NotFound = function (message, url) {
   let error = new Error();
   error.statusCode = 404;
-  error.name = "NotFound";
+  error.name = 'NotFound';
   error.message = message;
   error.url = url;
   return error;
