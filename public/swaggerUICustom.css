@@ -1,6 +1,7 @@
 /*
 CSS File to make Swagger-UI-Express more pleasant to the eyes
 Refer to https://www.npmjs.com/package/swagger-ui-express#custom-css-styles-from-url to know how to apply it
+If you want to have the topbar, just remove the first style
 */
 .topbar {
   display: none;
@@ -28,7 +29,9 @@ td,
 .model-title,
 .model,
 h3,
-label {
+label,
+th,
+.swagger-ui .parameter__name {
   color: #ffffff !important;
 }
 .opblock-tag {
