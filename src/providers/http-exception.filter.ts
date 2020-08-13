@@ -4,7 +4,7 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
-  Logger
+  Logger,
 } from '@nestjs/common';
 
 /*

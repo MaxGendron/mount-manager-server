@@ -8,12 +8,8 @@ export class CustomError {
   name: string;
   @ApiProperty()
   message: string;
-  
-  constructor(
-    statusCode: HttpStatus,
-    name: string,
-    message: string,
-  ) {
+
+  constructor(statusCode: HttpStatus, name: string, message: string) {
     this.statusCode = statusCode;
     this.name = name;
     this.message = message;

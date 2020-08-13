@@ -19,7 +19,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
         secret: configService.get<string>('JWT_SECRET'),
       }),
       inject: [ConfigService],
-    })
+    }),
   ],
   controllers: [UsersController],
   providers: [UsersService, LocalStrategy, JwtStrategy],

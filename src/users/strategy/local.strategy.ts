@@ -18,7 +18,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new HttpException(
         new CustomError(HttpStatus.NOT_FOUND, 'NotFound', 'No user found'),
-        HttpStatus.NOT_FOUND
+        HttpStatus.NOT_FOUND,
       );
     }
     return user;
