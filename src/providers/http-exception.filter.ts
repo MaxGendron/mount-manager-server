@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   ExceptionFilter,
   Catch,
   ArgumentsHost,
   HttpException,
-  HttpStatus,
   Logger,
 } from '@nestjs/common';
 
