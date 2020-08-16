@@ -32,6 +32,9 @@ export class MongoExceptionFilter extends HttpExceptionFilter {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    error.stack = exception.stack;
+    error.name = exception.name;
     super.catch(error, host);
   }
 }
