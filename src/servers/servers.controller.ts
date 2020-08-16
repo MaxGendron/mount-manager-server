@@ -43,7 +43,7 @@ export class ServersController {
   @Post()
   @ApiOperation({
     summary: 'Create server',
-    description: 'Create a new Server.',
+    description: 'Create a new server.',
   })
   @ApiCreatedResponse({
     description: 'The server has been created',
@@ -61,7 +61,7 @@ export class ServersController {
   @Put(':id')
   @ApiOperation({
     summary: 'Update server',
-    description: 'Update a existing Server.',
+    description: 'Update a existing server.',
   })
   @ApiOkResponse({
     description: 'The server has been updated',
@@ -81,7 +81,7 @@ export class ServersController {
   @HttpCode(204)
   @ApiOperation({
     summary: 'Delete server',
-    description: 'Delete a existing Server.',
+    description: 'Delete a existing server.',
   })
   @ApiNoContentResponse({
     description: 'The server has been deleted',
@@ -94,7 +94,7 @@ export class ServersController {
   @Get('/findbyname/:serverName')
   @ApiOperation({
     summary: 'Get server by name',
-    description: 'Get a Server by is name.',
+    description: 'Get a server by is name.',
   })
   @ApiOkResponse({
     description: 'The server has been found and returned',
@@ -107,7 +107,7 @@ export class ServersController {
   @Get(':id')
   @ApiOperation({
     summary: 'Get server by id',
-    description: 'Get a Server by is id.',
+    description: 'Get a server by is id.',
   })
   @ApiOkResponse({
     description: 'The server has been found and returned',
