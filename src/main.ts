@@ -72,6 +72,11 @@ async function bootstrap() {
     .build();
   const swaggerCustomOptions: SwaggerCustomOptions = {
     customCssUrl: `http://localhost:${port}/swaggerUICustom.css`,
+    swaggerOptions: {
+      defaultModelsExpandDepth: 0,
+      defaultModelExpandDepth: 0,
+      docExpansion: 'none'
+    }
   };
   const document = SwaggerModule.createDocument(app, swaggerOptions);
   SwaggerModule.setup('api-docs', app, document, swaggerCustomOptions);
