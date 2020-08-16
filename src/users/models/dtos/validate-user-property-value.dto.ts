@@ -1,14 +1,11 @@
 import { IsNotEmpty, IsEnum } from 'class-validator';
-
-export enum UserPropertyEnum {
-  Username = 'username',
-  Email = 'email',
-}
+import { UserPropertyEnum } from '../enum/user-property.enum';
 
 export class ValidateUserPropertyValueDto {
   @IsNotEmpty()
   @IsEnum(UserPropertyEnum)
   property: UserPropertyEnum;
+  
   @IsNotEmpty()
   value: string;
 }

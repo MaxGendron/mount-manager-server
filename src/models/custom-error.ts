@@ -4,8 +4,10 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CustomError {
   @ApiProperty()
   statusCode: HttpStatus;
+
   @ApiProperty()
   name: string;
+  
   @ApiProperty()
   message: string;
 

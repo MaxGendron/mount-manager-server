@@ -27,10 +27,8 @@ import {
   CustomApiBadRequestResponse,
   CustomApiNotFoundResponse,
 } from 'src/models/api-response';
-import {
-  ValidateUserPropertyValueDto,
-  UserPropertyEnum,
-} from './models/dtos/validate-user-property-value.dto';
+import { ValidateUserPropertyValueDto } from './models/dtos/validate-user-property-value.dto';
+import { UserPropertyEnum } from './models/enum/user-property.enum';
 
 @ApiTags('Users')
 @ApiUnexpectedErrorResponse()
@@ -47,8 +45,8 @@ export class UsersController {
   @CustomApiBadRequestResponse(
     'Cannot Insert the requested user, verify your information.',
   )
-  create(@Body() newUserDto: NewUserDto): Promise<LoggedUserResponseDto> {
-    return this.usersService.create(newUserDto);
+  createUser(@Body() newUserDto: NewUserDto): Promise<LoggedUserResponseDto> {
+    return this.usersService.createUser(newUserDto);
   }
 
   @UseGuards(LocalAuthGuard)
@@ -79,7 +77,7 @@ export class UsersController {
     type: ExistReponseDto,
   })
   @CustomApiBadRequestResponse()
-  validatePropertyValue(
+  validateUserPropertyValue(
     @Query() query: ValidateUserPropertyValueDto,
   ): Promise<ExistReponseDto> {
     if (query.property === UserPropertyEnum.Email)
