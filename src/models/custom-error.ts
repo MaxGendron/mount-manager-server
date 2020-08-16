@@ -7,7 +7,7 @@ export class CustomError {
 
   @ApiProperty()
   name: string;
-  
+
   @ApiProperty()
   message: string;
 
