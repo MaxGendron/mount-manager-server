@@ -8,7 +8,7 @@ import { Server } from './models/schemas/server.schema';
 export class ServersService {
   constructor(@InjectModel(Server.name) private serverModel: Model<Server>) {}
 
-  //Create a mew server
+  //Create a new server
   createServer(serverDto: ServerDto): Promise<Server> {
     const newServer = new this.serverModel(serverDto);
     return newServer.save();
