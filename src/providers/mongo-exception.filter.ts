@@ -12,7 +12,7 @@ import { HttpExceptionFilter } from './http-exception.filter';
 @Catch(MongoError)
 export class MongoExceptionFilter extends HttpExceptionFilter {
   catch(exception: MongoError, host: ArgumentsHost) {
-    let error;
+    let error: HttpException;
     if (exception.code === 11000) {
       error = new HttpException(
         new CustomError(
