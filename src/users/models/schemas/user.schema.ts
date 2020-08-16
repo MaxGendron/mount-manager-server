@@ -3,8 +3,6 @@ import { BaseDocument } from 'src/models/base-document';
 
 @Schema()
 export class User extends BaseDocument {
-  _id: string;
-
   @Prop()
   username: string;
 
