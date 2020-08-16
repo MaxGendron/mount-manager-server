@@ -19,7 +19,7 @@ export class UsersService {
   ) {}
 
   //Create a new user
-  async create(newUserDto: NewUserDto): Promise<LoggedUserResponseDto> {
+  async createUser(newUserDto: NewUserDto): Promise<LoggedUserResponseDto> {
     //Check if the user already exist, if so return error
     //Sanity check, shouldn't happens since we're validating on the UI
     const count = await this.userModel
@@ -81,7 +81,7 @@ export class UsersService {
 
   //Validate if the given credentials exist in the system
   async validateUser(username: string, password: string): Promise<User> {
-    const user = await this.findOne(username);
+    const user = await this.findOneUser(username);
     //Verify password
     if (user) {
       const isValid = await bcrypt.compare(password, user.password);
@@ -93,7 +93,7 @@ export class UsersService {
   }
 
   //Look for the associated doc in the DB, username can be the email or the username
-  findOne(username: string): Promise<User> {
+  findOneUser(username: string): Promise<User> {
     return this.userModel
       .findOne({
         $or: [{ username: username }, { email: username }],

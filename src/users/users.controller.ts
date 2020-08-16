@@ -45,8 +45,8 @@ export class UsersController {
   @CustomApiBadRequestResponse(
     'Cannot Insert the requested user, verify your information.',
   )
-  create(@Body() newUserDto: NewUserDto): Promise<LoggedUserResponseDto> {
-    return this.usersService.create(newUserDto);
+  createUser(@Body() newUserDto: NewUserDto): Promise<LoggedUserResponseDto> {
+    return this.usersService.createUser(newUserDto);
   }
 
   @UseGuards(LocalAuthGuard)
@@ -77,7 +77,7 @@ export class UsersController {
     type: ExistReponseDto,
   })
   @CustomApiBadRequestResponse()
-  validatePropertyValue(
+  validateUserPropertyValue(
     @Query() query: ValidateUserPropertyValueDto,
   ): Promise<ExistReponseDto> {
     if (query.property === UserPropertyEnum.Email)
