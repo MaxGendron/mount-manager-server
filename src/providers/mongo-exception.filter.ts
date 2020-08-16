@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   Catch,
-  ExceptionFilter,
   ArgumentsHost,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { MongoError } from 'mongodb';
 import { CustomError } from 'src/models/custom-error';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 @Catch(MongoError)
-export class MongoFilter implements ExceptionFilter {
+export class MongoFilter extends HttpExceptionFilter {
   catch(exception: MongoError, host: ArgumentsHost) {
-    const response = host.switchToHttp().getResponse();
+    let error;
     if (exception.code === 11000) {
-      const error = new HttpException(
+      error = new HttpException(
         new CustomError(
           HttpStatus.BAD_REQUEST,
           'CannotInsert',
@@ -22,9 +22,8 @@ export class MongoFilter implements ExceptionFilter {
         ),
         HttpStatus.BAD_REQUEST,
       );
-      response.status(400).json(error.getResponse());
     } else {
-      const error = new HttpException(
+      error = new HttpException(
         new CustomError(
           HttpStatus.INTERNAL_SERVER_ERROR,
           'UnexpectedError',
@@ -32,7 +31,7 @@ export class MongoFilter implements ExceptionFilter {
         ),
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-      response.status(500).json(error.getResponse());
     }
+    super.catch(error, host);
   }
 }

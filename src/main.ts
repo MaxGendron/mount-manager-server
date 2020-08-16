@@ -45,7 +45,10 @@ async function bootstrap() {
         let errorName = 'UndefinedParameter';
         errors.forEach(error => {
           for (const constraint in error.constraints) {
-            if (constraint.includes('matches') || constraint.includes('isEnum')) {
+            if (
+              constraint.includes('matches') ||
+              constraint.includes('isEnum')
+            ) {
               errorName = 'BadParameter';
             }
           }
@@ -75,8 +78,8 @@ async function bootstrap() {
     swaggerOptions: {
       defaultModelsExpandDepth: 0,
       defaultModelExpandDepth: 0,
-      docExpansion: 'none'
-    }
+      docExpansion: 'none',
+    },
   };
   const document = SwaggerModule.createDocument(app, swaggerOptions);
   SwaggerModule.setup('api-docs', app, document, swaggerCustomOptions);
