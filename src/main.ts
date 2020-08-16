@@ -15,7 +15,7 @@ import {
   DocumentBuilder,
   SwaggerCustomOptions,
 } from '@nestjs/swagger';
-import { MongoFilter } from './providers/mongo-exception.filter';
+import { MongoExceptionFilter } from './providers/mongo-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -60,7 +60,7 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new HttpExceptionFilter(), new MongoFilter());
+  app.useGlobalFilters(new HttpExceptionFilter(), new MongoExceptionFilter());
   app.setGlobalPrefix('api');
   app.enableCors(corsOptions);
   app.use(express.static('public'));
