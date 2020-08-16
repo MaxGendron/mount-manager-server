@@ -13,7 +13,7 @@ import { ServersModule } from './servers/servers.module';
         uri: configService.get<string>('MONGOBD_STRING'),
         useNewUrlParser: true,
         useFindAndModify: false,
-        useCreateIndex: true
+        useCreateIndex: true,
       }),
       inject: [ConfigService],
     }),

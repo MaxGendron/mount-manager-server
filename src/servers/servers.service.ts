@@ -6,9 +6,7 @@ import { Server } from './models/schemas/server.schema';
 
 @Injectable()
 export class ServersService {
-  constructor(
-    @InjectModel(Server.name) private serverModel: Model<Server>,
-  ) {}
+  constructor(@InjectModel(Server.name) private serverModel: Model<Server>) {}
 
   //Create a mew server
   createServer(serverDto: ServerDto): Promise<Server> {
@@ -18,7 +16,7 @@ export class ServersService {
 
   //Update a existing server
   updateServer(id: string, serverDto: ServerDto): Promise<Server> {
-    return this.serverModel.findByIdAndUpdate(id, serverDto, {new: true});
+    return this.serverModel.findByIdAndUpdate(id, serverDto, { new: true });
   }
 
   //Delete a existing server

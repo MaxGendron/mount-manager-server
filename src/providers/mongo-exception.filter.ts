@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Catch, ExceptionFilter, ArgumentsHost, HttpException, HttpStatus } from "@nestjs/common";
+import {
+  Catch,
+  ExceptionFilter,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { MongoError } from 'mongodb';
-import { CustomError } from "src/models/custom-error";
+import { CustomError } from 'src/models/custom-error';
 
 @Catch(MongoError)
 export class MongoFilter implements ExceptionFilter {
