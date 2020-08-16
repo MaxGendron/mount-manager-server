@@ -39,7 +39,9 @@ export class ServersController {
     description: 'The server has been created',
     type: Server,
   })
-  @CustomApiBadRequestResponse()
+  @CustomApiBadRequestResponse(
+    'Cannot Insert the requested item, duplicate key error on a attribute.',
+  )
   createServer(@Body() serverDto: ServerDto): Promise<Server> {
     return this.serversService.createServer(serverDto);
   }
