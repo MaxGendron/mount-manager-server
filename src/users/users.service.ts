@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { LoggedUserResponseDto } from './models/dtos/responses/logged-user.response.dto';
 import { ExistReponseDto } from './models/dtos/responses/exist.response.dto';
+import { UserRoleEnum } from './models/enum/user-role.enum';
 
 @Injectable()
 export class UsersService {
@@ -47,6 +48,7 @@ export class UsersService {
 
     //Save the user
     const newUser = new this.userModel(newUserDto);
+    newUser.role = newUser.role ?? UserRoleEnum.User;
     newUser.save();
     //Log the user
     return this.login(newUser);
@@ -55,7 +57,7 @@ export class UsersService {
   //Return a JWT Token and the username of the user
   async login(user: User): Promise<LoggedUserResponseDto> {
     const token = this.jwtService.sign(
-      { username: user.username, sub: user._id },
+      { username: user.username, sub: user._id, role: user.role },
       {
         algorithm: 'HS512',
         expiresIn: '24h',
