@@ -7,6 +7,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ServersService } from './servers.service';
 import {
@@ -19,17 +20,26 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiNoContentResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ServerDto } from './models/dtos/server.dto';
 import { Server } from './models/schemas/server.schema';
 import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
+import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/users/guards/roles.guard';
+import { UserRoleEnum } from 'src/users/models/enum/user-role.enum';
+import { Roles } from 'src/models/roles.decorator';
 
 @ApiTags('Servers')
 @ApiUnexpectedErrorResponse()
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('servers')
 export class ServersController {
   constructor(private serversService: ServersService) {}
 
+  @Roles(UserRoleEnum.Admin)
+  @UseGuards(RolesGuard)
   @Post()
   @ApiOperation({
     summary: 'Create server',
@@ -46,6 +56,8 @@ export class ServersController {
     return this.serversService.createServer(serverDto);
   }
 
+  @Roles(UserRoleEnum.Admin)
+  @UseGuards(RolesGuard)
   @Put(':id')
   @ApiOperation({
     summary: 'Update server',
@@ -63,6 +75,8 @@ export class ServersController {
     return this.serversService.updateServer(mongoIdDto.id, serverDto);
   }
 
+  @Roles(UserRoleEnum.Admin)
+  @UseGuards(RolesGuard)
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({
