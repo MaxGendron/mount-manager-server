@@ -6,7 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Schema()
 export class AccountSetting extends BaseDocument {
-  @ApiProperty({type: String})
+  @ApiProperty({ type: String })
   @Prop({ unique: true })
   userId: ObjectId;
 
