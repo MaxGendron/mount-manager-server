@@ -39,9 +39,7 @@ export class ServersService {
 
   //Get a server by is name
   getServerByName(serverName: string): Promise<Server> {
-    return this.serverModel
-      .findOne({ serverName: serverName })
-      .exec();
+    return this.serverModel.findOne({ serverName: serverName }).exec();
   }
 
   //Get a server by is id

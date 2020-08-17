@@ -15,7 +15,7 @@ export class AccountSettingsService {
   constructor(
     @InjectModel(AccountSetting.name)
     private accountSettingModel: Model<AccountSetting>,
-    private serversService: ServersService
+    private serversService: ServersService,
   ) {}
 
   //Create a new accountSetting
@@ -55,7 +55,9 @@ export class AccountSettingsService {
 
   //Delete a existing accountSetting
   async deleteAccountSetting(id: string): Promise<void> {
-    const accountSetting = await this.accountSettingModel.findByIdAndRemove(id).exec();
+    const accountSetting = await this.accountSettingModel
+      .findByIdAndRemove(id)
+      .exec();
     if (!accountSetting) {
       ThrowExceptionUtils.notFoundException(this.entityType, id);
     }
