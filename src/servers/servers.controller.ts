@@ -13,6 +13,7 @@ import { ServersService } from './servers.service';
 import {
   ApiUnexpectedErrorResponse,
   CustomApiBadRequestResponse,
+  CustomApiNotFoundResponse,
 } from 'src/models/api-response';
 import {
   ApiTags,
@@ -43,7 +44,7 @@ export class ServersController {
   @Post()
   @ApiOperation({
     summary: 'Create server',
-    description: 'Create a new Server.',
+    description: 'Create a new server.',
   })
   @ApiCreatedResponse({
     description: 'The server has been created',
@@ -61,13 +62,14 @@ export class ServersController {
   @Put(':id')
   @ApiOperation({
     summary: 'Update server',
-    description: 'Update a existing Server.',
+    description: 'Update a existing server.',
   })
   @ApiOkResponse({
     description: 'The server has been updated',
     type: Server,
   })
   @CustomApiBadRequestResponse()
+  @CustomApiNotFoundResponse('No server setting found.')
   updateServer(
     @Param() mongoIdDto: MongoIdDto,
     @Body() serverDto: ServerDto,
@@ -81,39 +83,28 @@ export class ServersController {
   @HttpCode(204)
   @ApiOperation({
     summary: 'Delete server',
-    description: 'Delete a existing Server.',
+    description: 'Delete a existing server.',
   })
   @ApiNoContentResponse({
     description: 'The server has been deleted',
   })
   @CustomApiBadRequestResponse()
-  deleteServer(@Param() mongoIdDto: MongoIdDto): void {
-    this.serversService.deleteServer(mongoIdDto.id);
-  }
-
-  @Get('/findbyname/:serverName')
-  @ApiOperation({
-    summary: 'Get server by name',
-    description: 'Get a Server by is name.',
-  })
-  @ApiOkResponse({
-    description: 'The server has been found and returned',
-    type: Server,
-  })
-  getServerByName(@Param() serverDto: ServerDto): Promise<Server> {
-    return this.serversService.getServerByName(serverDto.serverName);
+  @CustomApiNotFoundResponse('No server setting found.')
+  async deleteServer(@Param() mongoIdDto: MongoIdDto): Promise<void> {
+    await this.serversService.deleteServer(mongoIdDto.id);
   }
 
   @Get(':id')
   @ApiOperation({
     summary: 'Get server by id',
-    description: 'Get a Server by is id.',
+    description: 'Get a server by is id.',
   })
   @ApiOkResponse({
     description: 'The server has been found and returned',
     type: Server,
   })
   @CustomApiBadRequestResponse()
+  @CustomApiNotFoundResponse('No server setting found.')
   getServerById(@Param() mongoIdDto: MongoIdDto): Promise<Server> {
     return this.serversService.getServerById(mongoIdDto.id);
   }

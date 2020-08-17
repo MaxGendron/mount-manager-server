@@ -15,7 +15,7 @@ import {
   DocumentBuilder,
   SwaggerCustomOptions,
 } from '@nestjs/swagger';
-import { MongoFilter } from './providers/mongo-exception.filter';
+import { MongoExceptionFilter } from './providers/mongo-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -45,7 +45,10 @@ async function bootstrap() {
         let errorName = 'UndefinedParameter';
         errors.forEach(error => {
           for (const constraint in error.constraints) {
-            if (constraint.includes('matches')) {
+            if (
+              constraint.includes('matches') ||
+              constraint.includes('isEnum')
+            ) {
               errorName = 'BadParameter';
             }
           }
@@ -57,7 +60,7 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new HttpExceptionFilter(), new MongoFilter());
+  app.useGlobalFilters(new HttpExceptionFilter(), new MongoExceptionFilter());
   app.setGlobalPrefix('api');
   app.enableCors(corsOptions);
   app.use(express.static('public'));
@@ -72,6 +75,11 @@ async function bootstrap() {
     .build();
   const swaggerCustomOptions: SwaggerCustomOptions = {
     customCssUrl: `http://localhost:${port}/swaggerUICustom.css`,
+    swaggerOptions: {
+      defaultModelsExpandDepth: 0,
+      defaultModelExpandDepth: 0,
+      docExpansion: 'none',
+    },
   };
   const document = SwaggerModule.createDocument(app, swaggerOptions);
   SwaggerModule.setup('api-docs', app, document, swaggerCustomOptions);
