@@ -6,7 +6,7 @@ export class UpdateAccountSettingDto {
   username: string;
 
   @IsOptional()
-  server: string;
+  serverName: string;
 
   @IsEnum(MountTypeEnum, { each: true })
   @IsOptional()

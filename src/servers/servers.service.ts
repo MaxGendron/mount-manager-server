@@ -38,18 +38,10 @@ export class ServersService {
   }
 
   //Get a server by is name
-  async getServerByName(serverName: string): Promise<Server> {
-    const server = await this.serverModel
+  getServerByName(serverName: string): Promise<Server> {
+    return this.serverModel
       .findOne({ serverName: serverName })
       .exec();
-    if (!server) {
-      ThrowExceptionUtils.notFoundException(
-        this.entityType,
-        serverName,
-        'serverName',
-      );
-    }
-    return server;
   }
 
   //Get a server by is id

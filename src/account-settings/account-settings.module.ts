@@ -7,12 +7,14 @@ import {
   AccountSetting,
   AccountSettingSchema,
 } from './models/schemas/account-setting.schema';
+import { ServersModule } from 'src/servers/servers.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: AccountSetting.name, schema: AccountSettingSchema },
     ]),
+    ServersModule,
   ],
   controllers: [AccountSettingsController],
   providers: [AccountSettingsService, JwtStrategy],

@@ -11,5 +11,6 @@ import { JwtStrategy } from 'src/users/strategy/jwt.strategy';
   ],
   controllers: [ServersController],
   providers: [ServersService, JwtStrategy],
+  exports: [ServersService]
 })
 export class ServersModule {}

@@ -16,7 +16,7 @@ export class AccountSetting extends BaseDocument {
 
   @ApiProperty()
   @Prop()
-  server: string;
+  serverName: string;
 
   @ApiProperty()
   @Prop([String])

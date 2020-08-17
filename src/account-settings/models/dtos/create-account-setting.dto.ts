@@ -6,7 +6,7 @@ export class CreateAccountSettingDto {
   username: string;
 
   @IsNotEmpty()
-  server: string;
+  serverName: string;
 
   @IsEnum(MountTypeEnum, { each: true })
   @IsNotEmpty()
