@@ -13,6 +13,7 @@ import { ServersService } from './servers.service';
 import {
   ApiUnexpectedErrorResponse,
   CustomApiBadRequestResponse,
+  CustomApiNotFoundResponse,
 } from 'src/models/api-response';
 import {
   ApiTags,
@@ -68,6 +69,7 @@ export class ServersController {
     type: Server,
   })
   @CustomApiBadRequestResponse()
+  @CustomApiNotFoundResponse('No server setting found.')
   updateServer(
     @Param() mongoIdDto: MongoIdDto,
     @Body() serverDto: ServerDto,
@@ -87,21 +89,9 @@ export class ServersController {
     description: 'The server has been deleted',
   })
   @CustomApiBadRequestResponse()
-  deleteServer(@Param() mongoIdDto: MongoIdDto): void {
-    this.serversService.deleteServer(mongoIdDto.id);
-  }
-
-  @Get('/findbyname/:serverName')
-  @ApiOperation({
-    summary: 'Get server by name',
-    description: 'Get a server by is name.',
-  })
-  @ApiOkResponse({
-    description: 'The server has been found and returned',
-    type: Server,
-  })
-  getServerByName(@Param() serverDto: ServerDto): Promise<Server> {
-    return this.serversService.getServerByName(serverDto.serverName);
+  @CustomApiNotFoundResponse('No server setting found.')
+  async deleteServer(@Param() mongoIdDto: MongoIdDto): Promise<void> {
+    await this.serversService.deleteServer(mongoIdDto.id);
   }
 
   @Get(':id')
@@ -114,6 +104,7 @@ export class ServersController {
     type: Server,
   })
   @CustomApiBadRequestResponse()
+  @CustomApiNotFoundResponse('No server setting found.')
   getServerById(@Param() mongoIdDto: MongoIdDto): Promise<Server> {
     return this.serversService.getServerById(mongoIdDto.id);
   }
