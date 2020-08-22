@@ -43,9 +43,11 @@ import { User } from 'src/models/decorator/user.decorator';
 export class AccountSettingsController {
   constructor(private accountSettingsService: AccountSettingsService) {}
 
-  @Post()
+  @Roles(UserRoleEnum.Admin)
+  @UseGuards(RolesGuard)
+  @Post(':userId')
   @ApiOperation({
-    summary: 'Create account setting',
+    summary: 'Create account setting - Admin',
     description: 'Create a new account setting.',
   })
   @ApiCreatedResponse({
@@ -55,7 +57,7 @@ export class AccountSettingsController {
   @CustomApiBadRequestResponse()
   createAccountSetting(
     @Body() createAccountSettingDto: CreateAccountSettingDto,
-    @User('_id') userId: string,
+    @Param('userId') userId: string,
   ): Promise<AccountSetting> {
     return this.accountSettingsService.createAccountSetting(
       userId,
@@ -92,7 +94,7 @@ export class AccountSettingsController {
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({
-    summary: 'Delete account setting',
+    summary: 'Delete account setting - Admin',
     description: 'Delete a existing account setting.',
   })
   @ApiNoContentResponse({
@@ -105,9 +107,11 @@ export class AccountSettingsController {
     await this.accountSettingsService.deleteAccountSetting(mongoIdDto.id);
   }
 
+  @Roles(UserRoleEnum.Admin)
+  @UseGuards(RolesGuard)
   @Get(':id')
   @ApiOperation({
-    summary: 'Get account setting by id',
+    summary: 'Get account setting by id - Admin',
     description: 'Get a account setting by is id.',
   })
   @ApiOkResponse({
@@ -119,10 +123,8 @@ export class AccountSettingsController {
   @CustomApiForbiddenResponse()
   getAccountSettingById(
     @Param() mongoIdDto: MongoIdDto,
-    @User('_id') userId: string,
   ): Promise<AccountSetting> {
     return this.accountSettingsService.getAccountSettingById(
-      userId,
       mongoIdDto.id,
     );
   }

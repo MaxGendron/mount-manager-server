@@ -43,7 +43,7 @@ export class ServersController {
   @UseGuards(RolesGuard)
   @Post()
   @ApiOperation({
-    summary: 'Create server',
+    summary: 'Create server - Admin',
     description: 'Create a new server.',
   })
   @ApiCreatedResponse({
@@ -61,7 +61,7 @@ export class ServersController {
   @UseGuards(RolesGuard)
   @Put(':id')
   @ApiOperation({
-    summary: 'Update server',
+    summary: 'Update server - Admin',
     description: 'Update a existing server.',
   })
   @ApiOkResponse({
@@ -82,7 +82,7 @@ export class ServersController {
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({
-    summary: 'Delete server',
+    summary: 'Delete server - Admin',
     description: 'Delete a existing server.',
   })
   @ApiNoContentResponse({
