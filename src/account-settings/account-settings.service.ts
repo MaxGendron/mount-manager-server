@@ -35,6 +35,7 @@ export class AccountSettingsService {
 
   //Update a existing accountSetting
   async updateAccountSetting(
+    userId: string,
     id: string,
     updateAccountSettingDto: UpdateAccountSettingDto,
   ): Promise<AccountSetting> {
@@ -47,9 +48,12 @@ export class AccountSettingsService {
       updateAccountSettingDto,
       { new: true },
     );
-    if (!accountSetting) {
+
+    if (!accountSetting)
       ThrowExceptionUtils.notFoundException(this.entityType, id);
-    }
+    //If the user who requested isn't the same as the one returned, throw exception
+    if (accountSetting.userId != userId) ThrowExceptionUtils.forbidden();
+
     return accountSetting;
   }
 
@@ -58,18 +62,25 @@ export class AccountSettingsService {
     const accountSetting = await this.accountSettingModel
       .findByIdAndRemove(id)
       .exec();
-    if (!accountSetting) {
+    if (!accountSetting)
       ThrowExceptionUtils.notFoundException(this.entityType, id);
-    }
+
     return accountSetting;
   }
 
   //Get a accountSetting by is id
-  async getAccountSettingById(id: string): Promise<AccountSetting> {
-    const accountSetting = await this.accountSettingModel.findById(id).exec();
-    if (!accountSetting) {
+  async getAccountSettingById(
+    userId: string,
+    id: string,
+  ): Promise<AccountSetting> {
+    const accountSetting: AccountSetting = await this.accountSettingModel
+      .findById(id)
+      .exec();
+    if (!accountSetting)
       ThrowExceptionUtils.notFoundException(this.entityType, id);
-    }
+    //If the user who requested isn't the same as the one returned, throw exception
+    if (accountSetting.userId != userId) ThrowExceptionUtils.forbidden();
+
     return accountSetting;
   }
 
@@ -86,5 +97,16 @@ export class AccountSettingsService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  //Get a accountSetting by a userId
+  async getAccountSettingByUserId(userId: string): Promise<AccountSetting> {
+    return await this.accountSettingModel.findOne({ userId: userId }).exec();
+  }
+
+  async createEmptyAccountSetting(userId: string): Promise<AccountSetting> {
+    const newAccountSetting = new this.accountSettingModel();
+    newAccountSetting.userId = userId;
+    return newAccountSetting.save();
   }
 }

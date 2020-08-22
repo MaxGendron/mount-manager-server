@@ -25,3 +25,10 @@ export const ApiUnexpectedErrorResponse = () =>
     type: CustomError,
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   });
+
+export const CustomApiForbiddenResponse = () =>
+  ApiResponse({
+    description: 'Forbidden ressource.',
+    type: CustomError,
+    status: HttpStatus.FORBIDDEN,
+  });

@@ -19,4 +19,11 @@ export class ThrowExceptionUtils {
       HttpStatus.NOT_FOUND,
     );
   }
+
+  static forbidden(): void {
+    throw new HttpException(
+      new CustomError(HttpStatus.FORBIDDEN, 'Forbidden', 'Forbidden resource'),
+      HttpStatus.FORBIDDEN,
+    );
+  }
 }

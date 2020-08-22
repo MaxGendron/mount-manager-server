@@ -29,7 +29,7 @@ import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/users/guards/roles.guard';
 import { UserRoleEnum } from 'src/users/models/enum/user-role.enum';
-import { Roles } from 'src/models/roles.decorator';
+import { Roles } from 'src/models/decorator/roles.decorator';
 
 @ApiTags('Servers')
 @ApiUnexpectedErrorResponse()
