@@ -68,7 +68,7 @@ export class AccountSettingsController {
   @Put(':id')
   @ApiOperation({
     summary: 'Update account setting',
-    description: 'Update a existing account setting.',
+    description: 'Update a existing account setting. - Partial update',
   })
   @ApiOkResponse({
     description: 'The account setting has been updated',
