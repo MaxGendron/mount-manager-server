@@ -116,14 +116,10 @@ export class UsersService {
       .exec();
   }
 
-  async getUserById(id: string, requestUserId: string): Promise<UserResponseDto> {
-    const user = await this.userModel.findById(id).exec();
-
+  async getUserByUserId(userId: string): Promise<UserResponseDto> {
+    const user = await this.userModel.findById(userId).exec();
     if (!user) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
-    }
-    if (user._id != requestUserId) {
-      ThrowExceptionUtils.forbidden();
+      ThrowExceptionUtils.notFoundException(this.entityType, userId);
     }
     return new UserResponseDto(user.username, user.email);
   }

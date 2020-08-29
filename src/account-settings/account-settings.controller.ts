@@ -62,7 +62,9 @@ export class AccountSettingsController {
     description: 'The account setting has been found and returned',
     type: AccountSetting,
   })
-  @CustomApiBadRequestResponse()
+  @CustomApiNotFoundResponse(
+    'No account setting found for the requested userId.',
+  )
   async getAccountSettingByUserId(
     @User('_id') userId: string,
   ): Promise<AccountSetting> {

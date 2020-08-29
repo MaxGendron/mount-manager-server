@@ -8,7 +8,6 @@ import {
   HttpCode,
   Get,
   Query,
-  Param,
 } from '@nestjs/common';
 import { RegisterDto } from './models/dtos/register.dto';
 import { UsersService } from './users.service';
@@ -28,7 +27,6 @@ import {
   ApiUnexpectedErrorResponse,
   CustomApiBadRequestResponse,
   CustomApiNotFoundResponse,
-  CustomApiForbiddenResponse,
   CustomApiUnauthorizedResponse,
 } from 'src/models/api-response';
 import { ValidateUserPropertyValueDto } from './models/dtos/validate-user-property-value.dto';
@@ -36,7 +34,6 @@ import { UserPropertyEnum } from './models/enum/user-property.enum';
 import { UserResponseDto } from './models/dtos/responses/user.response.dto';
 import { User } from 'src/models/decorator/user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
 
 @ApiTags('Users')
 @ApiUnexpectedErrorResponse()
@@ -99,22 +96,20 @@ export class UsersController {
       return this.usersService.validateUsername(query.value);
   }
 
-  @ApiBearerAuth()
+  @ApiBearerAuth('/find/user-id')
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get()
   @ApiOperation({
-    summary: 'Get user by id',
-    description:
-      'Get a user by it\'s id',
+    summary: 'Get user by userId',
+    description: 'Get a user by the userId in the Auth Token',
   })
   @ApiOkResponse({
     description: 'The user has been found and returned.',
     type: ExistReponseDto,
   })
-  @CustomApiForbiddenResponse()
   @CustomApiUnauthorizedResponse()
-  @CustomApiBadRequestResponse()
-  getUserById(@Param() mongoIdDto: MongoIdDto, @User('_id') requestUserId: string): Promise<UserResponseDto> {
-    return this.usersService.getUserById(mongoIdDto.id, requestUserId);
+  @CustomApiNotFoundResponse('No user found for the requested userId.')
+  getUserByUserId(@User('_id') userId: string): Promise<UserResponseDto> {
+    return this.usersService.getUserByUserId(userId);
   }
 }

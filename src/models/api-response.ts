@@ -33,10 +33,9 @@ export const CustomApiForbiddenResponse = () =>
     status: HttpStatus.FORBIDDEN,
   });
 
- export const CustomApiUnauthorizedResponse = () =>
+export const CustomApiUnauthorizedResponse = () =>
   ApiResponse({
     description: 'Unauthorized.',
     type: CustomError,
     status: HttpStatus.UNAUTHORIZED,
   });
-

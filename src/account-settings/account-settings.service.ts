@@ -34,11 +34,12 @@ export class AccountSettingsService {
       { new: true },
     );
 
-    if (!accountSetting)
+    if (!accountSetting) {
       ThrowExceptionUtils.notFoundException(this.entityType, id);
+    }
     //If the user who requested isn't the same as the one returned, throw exception
     if (accountSetting.userId != userId) {
-       ThrowExceptionUtils.forbidden();
+      ThrowExceptionUtils.forbidden();
     }
     return accountSetting;
   }
@@ -60,7 +61,13 @@ export class AccountSettingsService {
 
   //Get a accountSetting by a userId
   async getAccountSettingByUserId(userId: string): Promise<AccountSetting> {
-    return await this.accountSettingModel.findOne({ userId: userId }).exec();
+    const accountSetting = await this.accountSettingModel
+      .findOne({ userId: userId })
+      .exec();
+    if (!accountSetting) {
+      ThrowExceptionUtils.notFoundException(this.entityType, userId, 'userId');
+    }
+    return accountSetting;
   }
 
   //Create a new accountSetting with only userId & mountTypes
