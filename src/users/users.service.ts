@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './models/schemas/user.schema';
@@ -13,6 +13,7 @@ import { UserRoleEnum } from './models/enum/user-role.enum';
 import { AccountSettingsService } from 'src/account-settings/account-settings.service';
 import { ThrowExceptionUtils } from 'src/utils/throw-exception.utils';
 import { UserResponseDto } from './models/dtos/responses/user.response.dto';
+import { UpdateUserDto } from './models/dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -116,11 +117,64 @@ export class UsersService {
       .exec();
   }
 
+  //Get a user by a userId (_id  of the doc)
   async getUserByUserId(userId: string): Promise<UserResponseDto> {
     const user = await this.userModel.findById(userId).exec();
     if (!user) {
       ThrowExceptionUtils.notFoundException(this.entityType, userId);
     }
-    return new UserResponseDto(user.username, user.email);
+    return new UserResponseDto(user._id, user.username, user.email);
+  }
+
+  //Update the given user with passed values
+  async updateUser(id: string, updateUserDto: UpdateUserDto, userId: string): Promise<UserResponseDto> {
+    let countQuery: any;
+    //Set the query accordingly with what is requested to be updated
+    if (updateUserDto.username != null && updateUserDto.email != null) {
+      countQuery = {
+        $or: [{ username: updateUserDto.username }, { email: updateUserDto.email }],
+      };
+    }
+    else if (updateUserDto.username != null) {
+      countQuery = { username: updateUserDto.username };
+    }
+    else if (updateUserDto.email != null) {
+      countQuery = { email: updateUserDto.email };
+    }
+    
+    if (countQuery) {
+      //Check if the user already exist, if so return error
+      const count = await this.userModel
+        .countDocuments(countQuery)
+        .exec();
+
+      if (count > 0) {
+        throw new HttpException(
+          new CustomError(
+            HttpStatus.BAD_REQUEST,
+            'CannotInsert',
+            'Cannot Insert the requested user, verify your information',
+          ),
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+
+    const user = await this.userModel.findById(id).exec();
+    if (!user) {
+      ThrowExceptionUtils.notFoundException(this.entityType, id);
+    }
+    //If the user who requested isn't the same as the one returned, throw exception
+    if (user._id != userId) {
+      ThrowExceptionUtils.forbidden();
+    }
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      id,
+      updateUserDto,
+      { new: true },
+    );
+
+    return new UserResponseDto(updatedUser._id, updatedUser.username, updatedUser.email);
   }
 }

@@ -8,6 +8,8 @@ import {
   HttpCode,
   Get,
   Query,
+  Put,
+  Param,
 } from '@nestjs/common';
 import { RegisterDto } from './models/dtos/register.dto';
 import { UsersService } from './users.service';
@@ -28,12 +30,15 @@ import {
   CustomApiBadRequestResponse,
   CustomApiNotFoundResponse,
   CustomApiUnauthorizedResponse,
+  CustomApiForbiddenResponse,
 } from 'src/models/api-response';
 import { ValidateUserPropertyValueDto } from './models/dtos/validate-user-property-value.dto';
 import { UserPropertyEnum } from './models/enum/user-property.enum';
 import { UserResponseDto } from './models/dtos/responses/user.response.dto';
 import { User } from 'src/models/decorator/user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
+import { UpdateUserDto } from './models/dtos/update-user.dto';
 
 @ApiTags('Users')
 @ApiUnexpectedErrorResponse()
@@ -111,5 +116,28 @@ export class UsersController {
   @CustomApiNotFoundResponse('No user found for the requested userId.')
   getUserByUserId(@User('_id') userId: string): Promise<UserResponseDto> {
     return this.usersService.getUserByUserId(userId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Put(':id')
+  @ApiOperation({
+    summary: 'Update user',
+    description: 'Update a existing user. - Partial update',
+  })
+  @ApiOkResponse({
+    description: 'The user has been updated',
+    type: UserResponseDto,
+  })
+  @CustomApiBadRequestResponse()
+  @CustomApiForbiddenResponse()
+  @CustomApiUnauthorizedResponse()
+  @CustomApiNotFoundResponse('No user found.')
+  updateAccountSetting(
+    @Param() mongoIdDto: MongoIdDto,
+    @Body() updateUserDto: UpdateUserDto,
+    @User('_id') userId: string,
+  ): Promise<UserResponseDto> {
+    return this.usersService.updateUser(mongoIdDto.id, updateUserDto, userId);
   }
 }
