@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, HttpException, HttpStatus, NotImplementedException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './models/schemas/user.schema';
@@ -127,26 +127,29 @@ export class UsersService {
   }
 
   //Update the given user with passed values
-  async updateUser(id: string, updateUserDto: UpdateUserDto, userId: string): Promise<UserResponseDto> {
+  async updateUser(
+    id: string,
+    updateUserDto: UpdateUserDto,
+    userId: string,
+  ): Promise<UserResponseDto> {
     let countQuery: any;
     //Set the query accordingly with what is requested to be updated
     if (updateUserDto.username != null && updateUserDto.email != null) {
       countQuery = {
-        $or: [{ username: updateUserDto.username }, { email: updateUserDto.email }],
+        $or: [
+          { username: updateUserDto.username },
+          { email: updateUserDto.email },
+        ],
       };
-    }
-    else if (updateUserDto.username != null) {
+    } else if (updateUserDto.username != null) {
       countQuery = { username: updateUserDto.username };
-    }
-    else if (updateUserDto.email != null) {
+    } else if (updateUserDto.email != null) {
       countQuery = { email: updateUserDto.email };
     }
-    
+
     if (countQuery) {
       //Check if the user already exist, if so return error
-      const count = await this.userModel
-        .countDocuments(countQuery)
-        .exec();
+      const count = await this.userModel.countDocuments(countQuery).exec();
 
       if (count > 0) {
         throw new HttpException(
@@ -175,6 +178,10 @@ export class UsersService {
       { new: true },
     );
 
-    return new UserResponseDto(updatedUser._id, updatedUser.username, updatedUser.email);
+    return new UserResponseDto(
+      updatedUser._id,
+      updatedUser.username,
+      updatedUser.email,
+    );
   }
 }

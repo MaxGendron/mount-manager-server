@@ -25,8 +25,7 @@ export class AccountSettingsService {
     updateAccountSettingDto: UpdateAccountSettingDto,
   ): Promise<AccountSetting> {
     //Validate the server, only if updated
-    if (updateAccountSettingDto.serverName)
-    {
+    if (updateAccountSettingDto.serverName) {
       await this.validateServerName(updateAccountSettingDto.serverName);
     }
 
@@ -40,11 +39,9 @@ export class AccountSettingsService {
       ThrowExceptionUtils.forbidden();
     }
 
-    return this.accountSettingModel.findByIdAndUpdate(
-      id,
-      updateAccountSettingDto,
-      { new: true },
-    ).exec();
+    return this.accountSettingModel
+      .findByIdAndUpdate(id, updateAccountSettingDto, { new: true })
+      .exec();
   }
 
   //Validate that the requested server exist
