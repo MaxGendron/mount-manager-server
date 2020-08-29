@@ -7,7 +7,7 @@ export class RegisterDto {
   username: string;
 
   @IsNotEmpty()
-  @Matches(new RegExp('^[A-Z0-9._%+-]+@(?:[A-Z0-9-]+.)+[A-Z]{2,}$', 'i'))
+  @Matches(new RegExp(/[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,}/i))
   email: string;
 
   @IsNotEmpty()
