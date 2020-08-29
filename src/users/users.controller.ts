@@ -96,9 +96,9 @@ export class UsersController {
       return this.usersService.validateUsername(query.value);
   }
 
-  @ApiBearerAuth('/find/user-id')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('/find/user-id')
   @ApiOperation({
     summary: 'Get user by userId',
     description: 'Get a user by the userId in the Auth Token',
