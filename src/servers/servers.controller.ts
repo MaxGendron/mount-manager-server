@@ -15,6 +15,7 @@ import {
   CustomApiBadRequestResponse,
   CustomApiNotFoundResponse,
   CustomApiForbiddenResponse,
+  CustomApiUnauthorizedResponse,
 } from 'src/models/api-response';
 import {
   ApiTags,
@@ -34,6 +35,7 @@ import { Roles } from 'src/models/decorator/roles.decorator';
 
 @ApiTags('Servers')
 @ApiUnexpectedErrorResponse()
+@CustomApiUnauthorizedResponse()
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('servers')

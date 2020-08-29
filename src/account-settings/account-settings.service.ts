@@ -37,8 +37,9 @@ export class AccountSettingsService {
     if (!accountSetting)
       ThrowExceptionUtils.notFoundException(this.entityType, id);
     //If the user who requested isn't the same as the one returned, throw exception
-    if (accountSetting.userId != userId) ThrowExceptionUtils.forbidden();
-
+    if (accountSetting.userId != userId) {
+       ThrowExceptionUtils.forbidden();
+    }
     return accountSetting;
   }
 

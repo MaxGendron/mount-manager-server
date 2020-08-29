@@ -11,9 +11,13 @@ import { LoggedUserResponseDto } from './models/dtos/responses/logged-user.respo
 import { ExistReponseDto } from './models/dtos/responses/exist.response.dto';
 import { UserRoleEnum } from './models/enum/user-role.enum';
 import { AccountSettingsService } from 'src/account-settings/account-settings.service';
+import { ThrowExceptionUtils } from 'src/utils/throw-exception.utils';
+import { UserResponseDto } from './models/dtos/responses/user.response.dto';
 
 @Injectable()
 export class UsersService {
+  private readonly entityType = 'User';
+
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private configService: ConfigService,
@@ -110,5 +114,17 @@ export class UsersService {
         $or: [{ username: username }, { email: username }],
       })
       .exec();
+  }
+
+  async getUserById(id: string, requestUserId: string): Promise<UserResponseDto> {
+    const user = await this.userModel.findById(id).exec();
+
+    if (!user) {
+      ThrowExceptionUtils.notFoundException(this.entityType, id);
+    }
+    if (user._id != requestUserId) {
+      ThrowExceptionUtils.forbidden();
+    }
+    return new UserResponseDto(user.username, user.email);
   }
 }

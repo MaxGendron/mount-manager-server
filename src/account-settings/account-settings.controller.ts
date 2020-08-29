@@ -11,6 +11,7 @@ import {
   CustomApiBadRequestResponse,
   CustomApiNotFoundResponse,
   CustomApiForbiddenResponse,
+  CustomApiUnauthorizedResponse,
 } from 'src/models/api-response';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { AccountSetting } from './models/schemas/account-setting.schema';
@@ -23,6 +24,7 @@ import { User } from 'src/models/decorator/user.decorator';
 @ApiUnexpectedErrorResponse()
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@CustomApiUnauthorizedResponse()
 @Controller('account-settings')
 export class AccountSettingsController {
   constructor(private accountSettingsService: AccountSettingsService) {}
