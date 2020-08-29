@@ -9,7 +9,7 @@ import {
   Get,
   Query,
 } from '@nestjs/common';
-import { NewUserDto } from './models/dtos/new-user.dto';
+import { RegisterDto } from './models/dtos/register.dto';
 import { UsersService } from './users.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginDto } from './models/dtos/login.dto';
@@ -37,16 +37,20 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create User', description: 'Create a new User.' })
+  @ApiOperation({
+    summary: 'Register',
+    description:
+      'Create a new User & a new account-settings with the right typeOfMount.',
+  })
   @ApiCreatedResponse({
-    description: 'The user has been created',
+    description: 'The user has been registered',
     type: LoggedUserResponseDto,
   })
   @CustomApiBadRequestResponse(
     'Cannot Insert the requested user, verify your information.',
   )
-  createUser(@Body() newUserDto: NewUserDto): Promise<LoggedUserResponseDto> {
-    return this.usersService.createUser(newUserDto);
+  register(@Body() newUserDto: RegisterDto): Promise<LoggedUserResponseDto> {
+    return this.usersService.register(newUserDto);
   }
 
   @UseGuards(LocalAuthGuard)

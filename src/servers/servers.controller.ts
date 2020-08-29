@@ -14,6 +14,7 @@ import {
   ApiUnexpectedErrorResponse,
   CustomApiBadRequestResponse,
   CustomApiNotFoundResponse,
+  CustomApiForbiddenResponse,
 } from 'src/models/api-response';
 import {
   ApiTags,
@@ -29,7 +30,7 @@ import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/users/guards/roles.guard';
 import { UserRoleEnum } from 'src/users/models/enum/user-role.enum';
-import { Roles } from 'src/models/roles.decorator';
+import { Roles } from 'src/models/decorator/roles.decorator';
 
 @ApiTags('Servers')
 @ApiUnexpectedErrorResponse()
@@ -43,7 +44,7 @@ export class ServersController {
   @UseGuards(RolesGuard)
   @Post()
   @ApiOperation({
-    summary: 'Create server',
+    summary: 'Create server - Admin',
     description: 'Create a new server.',
   })
   @ApiCreatedResponse({
@@ -53,6 +54,7 @@ export class ServersController {
   @CustomApiBadRequestResponse(
     'Cannot Insert the requested item, duplicate key error on a attribute.',
   )
+  @CustomApiForbiddenResponse()
   createServer(@Body() serverDto: ServerDto): Promise<Server> {
     return this.serversService.createServer(serverDto);
   }
@@ -61,7 +63,7 @@ export class ServersController {
   @UseGuards(RolesGuard)
   @Put(':id')
   @ApiOperation({
-    summary: 'Update server',
+    summary: 'Update server - Admin',
     description: 'Update a existing server.',
   })
   @ApiOkResponse({
@@ -70,6 +72,7 @@ export class ServersController {
   })
   @CustomApiBadRequestResponse()
   @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiForbiddenResponse()
   updateServer(
     @Param() mongoIdDto: MongoIdDto,
     @Body() serverDto: ServerDto,
@@ -82,7 +85,7 @@ export class ServersController {
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({
-    summary: 'Delete server',
+    summary: 'Delete server - Admin',
     description: 'Delete a existing server.',
   })
   @ApiNoContentResponse({
@@ -90,6 +93,7 @@ export class ServersController {
   })
   @CustomApiBadRequestResponse()
   @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiForbiddenResponse()
   async deleteServer(@Param() mongoIdDto: MongoIdDto): Promise<void> {
     await this.serversService.deleteServer(mongoIdDto.id);
   }

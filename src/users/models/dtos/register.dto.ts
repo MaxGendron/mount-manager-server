@@ -1,7 +1,8 @@
 import { IsNotEmpty, Matches, IsEnum, IsOptional } from 'class-validator';
 import { UserRoleEnum } from '../enum/user-role.enum';
+import { MountTypeEnum } from 'src/account-settings/models/enum/mount-type.enum';
 
-export class NewUserDto {
+export class RegisterDto {
   @IsNotEmpty()
   username: string;
 
@@ -15,4 +16,8 @@ export class NewUserDto {
   @IsEnum(UserRoleEnum)
   @IsOptional()
   role: UserRoleEnum;
+
+  @IsEnum(MountTypeEnum, { each: true })
+  @IsNotEmpty()
+  mountTypes: MountTypeEnum[];
 }

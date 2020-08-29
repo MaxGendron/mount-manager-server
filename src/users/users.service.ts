@@ -3,13 +3,14 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './models/schemas/user.schema';
-import { NewUserDto } from './models/dtos/new-user.dto';
+import { RegisterDto } from './models/dtos/register.dto';
 import { CustomError } from 'src/models/custom-error';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { LoggedUserResponseDto } from './models/dtos/responses/logged-user.response.dto';
 import { ExistReponseDto } from './models/dtos/responses/exist.response.dto';
 import { UserRoleEnum } from './models/enum/user-role.enum';
+import { AccountSettingsService } from 'src/account-settings/account-settings.service';
 
 @Injectable()
 export class UsersService {
@@ -17,15 +18,16 @@ export class UsersService {
     @InjectModel(User.name) private userModel: Model<User>,
     private configService: ConfigService,
     private jwtService: JwtService,
+    private accountSettingsService: AccountSettingsService,
   ) {}
 
   //Create a new user
-  async createUser(newUserDto: NewUserDto): Promise<LoggedUserResponseDto> {
+  async register(registerDto: RegisterDto): Promise<LoggedUserResponseDto> {
     //Check if the user already exist, if so return error
     //Sanity check, shouldn't happens since we're validating on the UI
     const count = await this.userModel
       .countDocuments({
-        $or: [{ username: newUserDto.username }, { email: newUserDto.email }],
+        $or: [{ username: registerDto.username }, { email: registerDto.email }],
       })
       .exec();
 
@@ -44,12 +46,19 @@ export class UsersService {
     const salt = await bcrypt.genSalt(
       +this.configService.get<number>('BCRYPT_ROUND'),
     );
-    newUserDto.password = await bcrypt.hash(newUserDto.password, salt);
+    registerDto.password = await bcrypt.hash(registerDto.password, salt);
 
     //Save the user
-    const newUser = new this.userModel(newUserDto);
+    const newUser = new this.userModel(registerDto);
     newUser.role = newUser.role ?? UserRoleEnum.User;
     newUser.save();
+
+    //Create a empty account-settings with only userId & mountTypes
+    await this.accountSettingsService.createNewAccountSetting(
+      newUser._id,
+      registerDto.mountTypes,
+    );
+
     //Log the user
     return this.login(newUser);
   }
