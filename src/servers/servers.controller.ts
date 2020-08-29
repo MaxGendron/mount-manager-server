@@ -14,6 +14,7 @@ import {
   ApiUnexpectedErrorResponse,
   CustomApiBadRequestResponse,
   CustomApiNotFoundResponse,
+  CustomApiForbiddenResponse,
 } from 'src/models/api-response';
 import {
   ApiTags,
@@ -53,6 +54,7 @@ export class ServersController {
   @CustomApiBadRequestResponse(
     'Cannot Insert the requested item, duplicate key error on a attribute.',
   )
+  @CustomApiForbiddenResponse()
   createServer(@Body() serverDto: ServerDto): Promise<Server> {
     return this.serversService.createServer(serverDto);
   }
@@ -70,6 +72,7 @@ export class ServersController {
   })
   @CustomApiBadRequestResponse()
   @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiForbiddenResponse()
   updateServer(
     @Param() mongoIdDto: MongoIdDto,
     @Body() serverDto: ServerDto,
@@ -90,6 +93,7 @@ export class ServersController {
   })
   @CustomApiBadRequestResponse()
   @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiForbiddenResponse()
   async deleteServer(@Param() mongoIdDto: MongoIdDto): Promise<void> {
     await this.serversService.deleteServer(mongoIdDto.id);
   }
