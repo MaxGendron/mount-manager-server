@@ -18,6 +18,6 @@ import { ServersModule } from 'src/servers/servers.module';
   ],
   controllers: [AccountSettingsController],
   providers: [AccountSettingsService, JwtStrategy],
-  exports: [AccountSettingsService]
+  exports: [AccountSettingsService],
 })
 export class AccountSettingsModule {}

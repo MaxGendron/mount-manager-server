@@ -18,7 +18,7 @@ export class UsersService {
     @InjectModel(User.name) private userModel: Model<User>,
     private configService: ConfigService,
     private jwtService: JwtService,
-    private accountSettingsService: AccountSettingsService
+    private accountSettingsService: AccountSettingsService,
   ) {}
 
   //Create a new user
@@ -54,7 +54,10 @@ export class UsersService {
     newUser.save();
 
     //Create a empty account-settings with only userId & mountTypes
-    await this.accountSettingsService.createNewAccountSetting(newUser._id, registerDto.mountTypes);
+    await this.accountSettingsService.createNewAccountSetting(
+      newUser._id,
+      registerDto.mountTypes,
+    );
 
     //Log the user
     return this.login(newUser);

@@ -37,7 +37,11 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Register', description: 'Create a new User & a new account-settings with the right typeOfMount.' })
+  @ApiOperation({
+    summary: 'Register',
+    description:
+      'Create a new User & a new account-settings with the right typeOfMount.',
+  })
   @ApiCreatedResponse({
     description: 'The user has been registered',
     type: LoggedUserResponseDto,

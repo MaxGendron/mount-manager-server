@@ -1,12 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import {
-  Controller,
-  UseGuards,
-  Body,
-  Put,
-  Param,
-  Get,
-} from '@nestjs/common';
+import { Controller, UseGuards, Body, Put, Param, Get } from '@nestjs/common';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -61,8 +54,7 @@ export class AccountSettingsController {
   @Get('/find/user-id')
   @ApiOperation({
     summary: 'Get account setting by userId',
-    description:
-      "Get a account setting by the userId in the Auth Token",
+    description: 'Get a account setting by the userId in the Auth Token',
   })
   @ApiOkResponse({
     description: 'The account setting has been found and returned',
@@ -72,8 +64,6 @@ export class AccountSettingsController {
   async getAccountSettingByUserId(
     @User('_id') userId: string,
   ): Promise<AccountSetting> {
-    return await this.accountSettingsService.getAccountSettingByUserId(
-      userId,
-    );
+    return await this.accountSettingsService.getAccountSettingByUserId(userId);
   }
 }
