@@ -105,7 +105,7 @@ export class UsersController {
   })
   @ApiOkResponse({
     description: 'The user has been found and returned.',
-    type: ExistReponseDto,
+    type: UserResponseDto,
   })
   @CustomApiUnauthorizedResponse()
   @CustomApiNotFoundResponse('No user found for the requested userId.')
