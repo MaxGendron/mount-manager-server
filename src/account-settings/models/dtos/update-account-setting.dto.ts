@@ -10,5 +10,5 @@ export class UpdateAccountSettingDto {
 
   @IsEnum(MountTypeEnum, { each: true })
   @IsOptional()
-  mountType: MountTypeEnum[];
+  mountTypes: MountTypeEnum[];
 }
