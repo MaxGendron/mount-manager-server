@@ -26,13 +26,11 @@ export class AccountSettingsService {
   ): Promise<AccountSetting> {
     //Validate the server, only if updated
     if (updateAccountSettingDto.serverName)
+    {
       await this.validateServerName(updateAccountSettingDto.serverName);
+    }
 
-    const accountSetting = await this.accountSettingModel.findByIdAndUpdate(
-      id,
-      updateAccountSettingDto,
-      { new: true },
-    );
+    const accountSetting = await this.accountSettingModel.findById(id).exec();
 
     if (!accountSetting) {
       ThrowExceptionUtils.notFoundException(this.entityType, id);
@@ -41,7 +39,12 @@ export class AccountSettingsService {
     if (accountSetting.userId != userId) {
       ThrowExceptionUtils.forbidden();
     }
-    return accountSetting;
+
+    return this.accountSettingModel.findByIdAndUpdate(
+      id,
+      updateAccountSettingDto,
+      { new: true },
+    ).exec();
   }
 
   //Validate that the requested server exist

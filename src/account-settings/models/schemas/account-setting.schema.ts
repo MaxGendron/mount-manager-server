@@ -20,7 +20,7 @@ export class AccountSetting extends BaseDocument {
 
   @ApiProperty()
   @Prop([String])
-  mountType: MountTypeEnum[];
+  mountTypes: MountTypeEnum[];
 }
 
 export const AccountSettingSchema = SchemaFactory.createForClass(
