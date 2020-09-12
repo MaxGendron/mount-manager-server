@@ -55,8 +55,8 @@ export class UsersService {
     newUser.role = newUser.role ?? UserRoleEnum.User;
     newUser.save();
 
-    //Create a empty account-settings with only userId & mountTypes
-    await this.accountSettingsService.createNewAccountSetting(newUser._id, registerDto.mountTypes);
+    //Create a empty accountSettings with only userId & mountTypes
+    await this.accountSettingsService.createNewAccountSettings(newUser._id, registerDto.mountTypes);
 
     //Log the user
     return this.login(newUser);

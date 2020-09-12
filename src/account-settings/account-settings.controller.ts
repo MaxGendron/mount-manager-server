@@ -9,10 +9,10 @@ import {
   CustomApiUnauthorizedResponse,
 } from 'src/models/api-response';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
-import { AccountSetting } from './models/schemas/account-setting.schema';
+import { AccountSettings } from './models/schemas/account-setting.schema';
 import { AccountSettingsService } from './account-settings.service';
 import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
-import { UpdateAccountSettingDto } from './models/dtos/update-account-setting.dto';
+import { UpdateAccountSettingsDto } from './models/dtos/update-account-setting.dto';
 import { User } from 'src/models/decorator/user.decorator';
 
 @ApiTags('Account Settings')
@@ -31,17 +31,17 @@ export class AccountSettingsController {
   })
   @ApiOkResponse({
     description: 'The account setting has been updated',
-    type: AccountSetting,
+    type: AccountSettings,
   })
   @CustomApiBadRequestResponse()
   @CustomApiForbiddenResponse()
   @CustomApiNotFoundResponse('No account setting found.')
-  updateAccountSetting(
+  updateAccountSettings(
     @Param() mongoIdDto: MongoIdDto,
-    @Body() updateAccountSettingDto: UpdateAccountSettingDto,
+    @Body() updateAccountSettingDto: UpdateAccountSettingsDto,
     @User('_id') userId: string,
-  ): Promise<AccountSetting> {
-    return this.accountSettingsService.updateAccountSetting(userId, mongoIdDto.id, updateAccountSettingDto);
+  ): Promise<AccountSettings> {
+    return this.accountSettingsService.updateAccountSettings(userId, mongoIdDto.id, updateAccountSettingDto);
   }
 
   @Get('/find/user-id')
@@ -51,10 +51,10 @@ export class AccountSettingsController {
   })
   @ApiOkResponse({
     description: 'The account setting has been found and returned',
-    type: AccountSetting,
+    type: AccountSettings,
   })
   @CustomApiNotFoundResponse('No account setting found for the requested userId.')
-  async getAccountSettingByUserId(@User('_id') userId: string): Promise<AccountSetting> {
-    return await this.accountSettingsService.getAccountSettingByUserId(userId);
+  async getAccountSettingsByUserId(@User('_id') userId: string): Promise<AccountSettings> {
+    return await this.accountSettingsService.getAccountSettingsByUserId(userId);
   }
 }

@@ -1,8 +1,8 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { AccountSetting } from './models/schemas/account-setting.schema';
+import { AccountSettings } from './models/schemas/account-setting.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UpdateAccountSettingDto } from './models/dtos/update-account-setting.dto';
+import { UpdateAccountSettingsDto } from './models/dtos/update-account-setting.dto';
 import { ThrowExceptionUtils } from 'src/utils/throw-exception.utils';
 import { ServersService } from 'src/servers/servers.service';
 import { CustomError } from 'src/models/custom-error';
@@ -13,23 +13,23 @@ export class AccountSettingsService {
   private readonly entityType = 'Account Setting';
 
   constructor(
-    @InjectModel(AccountSetting.name)
-    private accountSettingModel: Model<AccountSetting>,
+    @InjectModel(AccountSettings.name)
+    private accountSettingsModel: Model<AccountSettings>,
     private serversService: ServersService,
   ) {}
 
-  //Update a existing accountSetting
-  async updateAccountSetting(
+  //Update a existing accountSettings
+  async updateAccountSettings(
     userId: string,
     id: string,
-    updateAccountSettingDto: UpdateAccountSettingDto,
-  ): Promise<AccountSetting> {
+    updateAccountSettingsDto: UpdateAccountSettingsDto,
+  ): Promise<AccountSettings> {
     //Validate the server, only if updated
-    if (updateAccountSettingDto.serverName) {
-      await this.validateServerName(updateAccountSettingDto.serverName);
+    if (updateAccountSettingsDto.serverName) {
+      await this.validateServerName(updateAccountSettingsDto.serverName);
     }
 
-    const accountSetting = await this.accountSettingModel.findById(id).exec();
+    const accountSetting = await this.accountSettingsModel.findById(id).exec();
 
     if (!accountSetting) {
       ThrowExceptionUtils.notFoundException(this.entityType, id);
@@ -39,7 +39,7 @@ export class AccountSettingsService {
       ThrowExceptionUtils.forbidden();
     }
 
-    return this.accountSettingModel.findByIdAndUpdate(id, updateAccountSettingDto, { new: true }).exec();
+    return this.accountSettingsModel.findByIdAndUpdate(id, updateAccountSettingsDto, { new: true }).exec();
   }
 
   //Validate that the requested server exist
@@ -57,20 +57,21 @@ export class AccountSettingsService {
     }
   }
 
-  //Get a accountSetting by a userId
-  async getAccountSettingByUserId(userId: string): Promise<AccountSetting> {
-    const accountSetting = await this.accountSettingModel.findOne({ userId: userId }).exec();
-    if (!accountSetting) {
+  //Get a accountSettings by a userId
+  async getAccountSettingsByUserId(userId: string): Promise<AccountSettings> {
+    const accountSettings = await this.accountSettingsModel.findOne({ userId: userId }).exec();
+    if (!accountSettings) {
       ThrowExceptionUtils.notFoundException(this.entityType, userId, 'userId');
     }
-    return accountSetting;
+    return accountSettings;
   }
 
-  //Create a new accountSetting with only userId & mountTypes
-  async createNewAccountSetting(userId: string, mountTypes: MountTypeEnum[]): Promise<AccountSetting> {
-    const newAccountSetting = new this.accountSettingModel();
-    newAccountSetting.userId = userId;
-    newAccountSetting.mountType = mountTypes;
-    return newAccountSetting.save();
+  //Create a new accountSettings with only userId & mountTypes
+  async createNewAccountSettings(userId: string, mountTypes: MountTypeEnum[]): Promise<AccountSettings> {
+
+    const newAccountSettings = new this.accountSettingsModel();
+    newAccountSettings.userId = userId;
+    newAccountSettings.mountTypes = mountTypes;
+    return newAccountSettings.save();
   }
 }

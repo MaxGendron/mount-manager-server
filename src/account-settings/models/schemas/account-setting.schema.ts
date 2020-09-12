@@ -5,7 +5,7 @@ import { BaseDocument } from 'src/models/base-document';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Schema()
-export class AccountSetting extends BaseDocument {
+export class AccountSettings extends BaseDocument {
   @ApiProperty({ type: String })
   @Prop({ unique: true })
   userId: ObjectId;
@@ -23,4 +23,4 @@ export class AccountSetting extends BaseDocument {
   mountTypes: MountTypeEnum[];
 }
 
-export const AccountSettingSchema = SchemaFactory.createForClass(AccountSetting);
+export const AccountSettingSchema = SchemaFactory.createForClass(AccountSettings);
