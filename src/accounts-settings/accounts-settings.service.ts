@@ -68,7 +68,6 @@ export class AccountSettingsService {
 
   //Create a new accountSettings with only userId & mountTypes
   async createNewAccountSettings(userId: string, mountTypes: MountTypeEnum[]): Promise<AccountSettings> {
-
     const newAccountSettings = new this.accountSettingsModel();
     newAccountSettings.userId = userId;
     newAccountSettings.mountTypes = mountTypes;
