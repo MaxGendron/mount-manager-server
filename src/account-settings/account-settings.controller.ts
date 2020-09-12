@@ -9,10 +9,10 @@ import {
   CustomApiUnauthorizedResponse,
 } from 'src/models/api-response';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
-import { AccountSettings } from './models/schemas/account-setting.schema';
+import { AccountSettings } from './models/schemas/account-settings.schema';
 import { AccountSettingsService } from './account-settings.service';
 import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
-import { UpdateAccountSettingsDto } from './models/dtos/update-account-setting.dto';
+import { UpdateAccountSettingsDto } from './models/dtos/update-account-settings.dto';
 import { User } from 'src/models/decorator/user.decorator';
 
 @ApiTags('Account Settings')

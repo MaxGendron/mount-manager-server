@@ -3,7 +3,7 @@ import { AccountSettingsController } from './account-settings.controller';
 import { AccountSettingsService } from './account-settings.service';
 import { JwtStrategy } from 'src/users/strategy/jwt.strategy';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AccountSettings, AccountSettingSchema } from './models/schemas/account-setting.schema';
+import { AccountSettings, AccountSettingSchema } from './models/schemas/account-settings.schema';
 import { ServersModule } from 'src/servers/servers.module';
 
 @Module({

@@ -1,8 +1,8 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { AccountSettings } from './models/schemas/account-setting.schema';
+import { AccountSettings } from './models/schemas/account-settings.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UpdateAccountSettingsDto } from './models/dtos/update-account-setting.dto';
+import { UpdateAccountSettingsDto } from './models/dtos/update-account-settings.dto';
 import { ThrowExceptionUtils } from 'src/utils/throw-exception.utils';
 import { ServersService } from 'src/servers/servers.service';
 import { CustomError } from 'src/models/custom-error';
