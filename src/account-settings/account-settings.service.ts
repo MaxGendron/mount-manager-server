@@ -39,9 +39,7 @@ export class AccountSettingsService {
       ThrowExceptionUtils.forbidden();
     }
 
-    return this.accountSettingModel
-      .findByIdAndUpdate(id, updateAccountSettingDto, { new: true })
-      .exec();
+    return this.accountSettingModel.findByIdAndUpdate(id, updateAccountSettingDto, { new: true }).exec();
   }
 
   //Validate that the requested server exist
@@ -61,9 +59,7 @@ export class AccountSettingsService {
 
   //Get a accountSetting by a userId
   async getAccountSettingByUserId(userId: string): Promise<AccountSetting> {
-    const accountSetting = await this.accountSettingModel
-      .findOne({ userId: userId })
-      .exec();
+    const accountSetting = await this.accountSettingModel.findOne({ userId: userId }).exec();
     if (!accountSetting) {
       ThrowExceptionUtils.notFoundException(this.entityType, userId, 'userId');
     }
@@ -71,10 +67,7 @@ export class AccountSettingsService {
   }
 
   //Create a new accountSetting with only userId & mountTypes
-  async createNewAccountSetting(
-    userId: string,
-    mountTypes: MountTypeEnum[],
-  ): Promise<AccountSetting> {
+  async createNewAccountSetting(userId: string, mountTypes: MountTypeEnum[]): Promise<AccountSetting> {
     const newAccountSetting = new this.accountSettingModel();
     newAccountSetting.userId = userId;
     newAccountSetting.mountType = mountTypes;

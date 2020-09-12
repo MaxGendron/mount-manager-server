@@ -1,28 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import {
-  Controller,
-  Post,
-  Body,
-  UseGuards,
-  Request,
-  HttpCode,
-  Get,
-  Query,
-  Put,
-  Param,
-} from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, HttpCode, Get, Query, Put, Param } from '@nestjs/common';
 import { RegisterDto } from './models/dtos/register.dto';
 import { UsersService } from './users.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginDto } from './models/dtos/login.dto';
-import {
-  ApiTags,
-  ApiBody,
-  ApiOperation,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { LoggedUserResponseDto } from './models/dtos/responses/logged-user.response.dto';
 import { ExistReponseDto } from './models/dtos/responses/exist.response.dto';
 import {
@@ -49,16 +31,13 @@ export class UsersController {
   @Post()
   @ApiOperation({
     summary: 'Register',
-    description:
-      'Create a new User & a new account-settings with the right typeOfMount.',
+    description: 'Create a new User & a new account-settings with the right typeOfMount.',
   })
   @ApiCreatedResponse({
     description: 'The user has been registered',
     type: LoggedUserResponseDto,
   })
-  @CustomApiBadRequestResponse(
-    'Cannot Insert the requested user, verify your information.',
-  )
+  @CustomApiBadRequestResponse('Cannot Insert the requested user, verify your information.')
   register(@Body() newUserDto: RegisterDto): Promise<LoggedUserResponseDto> {
     return this.usersService.register(newUserDto);
   }
@@ -84,21 +63,16 @@ export class UsersController {
   @Get('validate')
   @ApiOperation({
     summary: 'Validate if a user property value exist',
-    description:
-      'Validate if the value of the requested property alredy exist for a user.',
+    description: 'Validate if the value of the requested property alredy exist for a user.',
   })
   @ApiOkResponse({
     description: 'The user property value exist.',
     type: ExistReponseDto,
   })
   @CustomApiBadRequestResponse()
-  validateUserPropertyValue(
-    @Query() query: ValidateUserPropertyValueDto,
-  ): Promise<ExistReponseDto> {
-    if (query.property === UserPropertyEnum.Email)
-      return this.usersService.validateEmail(query.value);
-    else if (query.property === UserPropertyEnum.Username)
-      return this.usersService.validateUsername(query.value);
+  validateUserPropertyValue(@Query() query: ValidateUserPropertyValueDto): Promise<ExistReponseDto> {
+    if (query.property === UserPropertyEnum.Email) return this.usersService.validateEmail(query.value);
+    else if (query.property === UserPropertyEnum.Username) return this.usersService.validateUsername(query.value);
   }
 
   @ApiBearerAuth()

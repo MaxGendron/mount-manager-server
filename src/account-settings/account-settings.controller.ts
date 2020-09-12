@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Controller, UseGuards, Body, Put, Param, Get } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiBearerAuth,
-  ApiOperation,
-  ApiOkResponse,
-} from '@nestjs/swagger/dist';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger/dist';
 import {
   ApiUnexpectedErrorResponse,
   CustomApiBadRequestResponse,
@@ -46,11 +41,7 @@ export class AccountSettingsController {
     @Body() updateAccountSettingDto: UpdateAccountSettingDto,
     @User('_id') userId: string,
   ): Promise<AccountSetting> {
-    return this.accountSettingsService.updateAccountSetting(
-      userId,
-      mongoIdDto.id,
-      updateAccountSettingDto,
-    );
+    return this.accountSettingsService.updateAccountSetting(userId, mongoIdDto.id, updateAccountSettingDto);
   }
 
   @Get('/find/user-id')
@@ -62,12 +53,8 @@ export class AccountSettingsController {
     description: 'The account setting has been found and returned',
     type: AccountSetting,
   })
-  @CustomApiNotFoundResponse(
-    'No account setting found for the requested userId.',
-  )
-  async getAccountSettingByUserId(
-    @User('_id') userId: string,
-  ): Promise<AccountSetting> {
+  @CustomApiNotFoundResponse('No account setting found for the requested userId.')
+  async getAccountSettingByUserId(@User('_id') userId: string): Promise<AccountSetting> {
     return await this.accountSettingsService.getAccountSettingByUserId(userId);
   }
 }

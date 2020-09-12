@@ -48,9 +48,7 @@ export class UsersService {
     }
 
     //Encrypt the password
-    const salt = await bcrypt.genSalt(
-      +this.configService.get<number>('BCRYPT_ROUND'),
-    );
+    const salt = await bcrypt.genSalt(+this.configService.get<number>('BCRYPT_ROUND'));
     registerDto.password = await bcrypt.hash(registerDto.password, salt);
 
     //Save the user
@@ -59,10 +57,7 @@ export class UsersService {
     newUser.save();
 
     //Create a empty account-settings with only userId & mountTypes
-    await this.accountSettingsService.createNewAccountSetting(
-      newUser._id,
-      registerDto.mountTypes,
-    );
+    await this.accountSettingsService.createNewAccountSetting(newUser._id, registerDto.mountTypes);
 
     //Log the user
     return this.login(newUser);
@@ -89,9 +84,7 @@ export class UsersService {
 
   //Validate if the username already exist
   async validateUsername(username: string): Promise<ExistReponseDto> {
-    const count = await this.userModel
-      .countDocuments({ username: username })
-      .exec();
+    const count = await this.userModel.countDocuments({ username: username }).exec();
     return new ExistReponseDto(count > 0);
   }
 
@@ -127,19 +120,12 @@ export class UsersService {
   }
 
   //Update the given user with passed values
-  async updateUser(
-    id: string,
-    updateUserDto: UpdateUserDto,
-    userId: string,
-  ): Promise<UserResponseDto> {
+  async updateUser(id: string, updateUserDto: UpdateUserDto, userId: string): Promise<UserResponseDto> {
     let countQuery: any;
     //Set the query accordingly with what is requested to be updated
     if (updateUserDto.username != null && updateUserDto.email != null) {
       countQuery = {
-        $or: [
-          { username: updateUserDto.username },
-          { email: updateUserDto.email },
-        ],
+        $or: [{ username: updateUserDto.username }, { email: updateUserDto.email }],
       };
     } else if (updateUserDto.username != null) {
       countQuery = { username: updateUserDto.username };
@@ -172,16 +158,8 @@ export class UsersService {
       ThrowExceptionUtils.forbidden();
     }
 
-    const updatedUser = await this.userModel.findByIdAndUpdate(
-      id,
-      updateUserDto,
-      { new: true },
-    );
+    const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
 
-    return new UserResponseDto(
-      updatedUser._id,
-      updatedUser.username,
-      updatedUser.email,
-    );
+    return new UserResponseDto(updatedUser._id, updatedUser.username, updatedUser.email);
   }
 }

@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Body,
-  Post,
-  Put,
-  Param,
-  Delete,
-  Get,
-  HttpCode,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Body, Post, Put, Param, Delete, Get, HttpCode, UseGuards } from '@nestjs/common';
 import { ServersService } from './servers.service';
 import {
   ApiUnexpectedErrorResponse,
@@ -53,9 +43,7 @@ export class ServersController {
     description: 'The server has been created',
     type: Server,
   })
-  @CustomApiBadRequestResponse(
-    'Cannot Insert the requested item, duplicate key error on a attribute.',
-  )
+  @CustomApiBadRequestResponse('Cannot Insert the requested item, duplicate key error on a attribute.')
   @CustomApiForbiddenResponse()
   createServer(@Body() serverDto: ServerDto): Promise<Server> {
     return this.serversService.createServer(serverDto);
@@ -75,10 +63,7 @@ export class ServersController {
   @CustomApiBadRequestResponse()
   @CustomApiNotFoundResponse('No server setting found.')
   @CustomApiForbiddenResponse()
-  updateServer(
-    @Param() mongoIdDto: MongoIdDto,
-    @Body() serverDto: ServerDto,
-  ): Promise<Server> {
+  updateServer(@Param() mongoIdDto: MongoIdDto, @Body() serverDto: ServerDto): Promise<Server> {
     return this.serversService.updateServer(mongoIdDto.id, serverDto);
   }
 

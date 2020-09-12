@@ -23,6 +23,4 @@ export class AccountSetting extends BaseDocument {
   mountTypes: MountTypeEnum[];
 }
 
-export const AccountSettingSchema = SchemaFactory.createForClass(
-  AccountSetting,
-);
+export const AccountSettingSchema = SchemaFactory.createForClass(AccountSetting);
