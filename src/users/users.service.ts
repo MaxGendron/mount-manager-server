@@ -47,9 +47,8 @@ export class UsersService {
       );
     }
 
-    //Encrypt the password
-    const salt = await bcrypt.genSalt(+this.configService.get<number>('BCRYPT_ROUND'));
-    registerDto.password = await bcrypt.hash(registerDto.password, salt);
+    //Hash the password
+    registerDto.password = await this.hashPassword(registerDto.password);
 
     //Save the user
     const newUser = new this.userModel(registerDto);
@@ -158,8 +157,19 @@ export class UsersService {
       ThrowExceptionUtils.forbidden();
     }
 
+    //If the password is being updated, need to hash it
+    if (updateUserDto.password != null) {
+      updateUserDto.password = await this.hashPassword(updateUserDto.password);
+    }
+
     const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
 
     return new UserResponseDto(updatedUser._id, updatedUser.username, updatedUser.email);
+  }
+
+  async hashPassword(plainPassword: string) : Promise<string> {
+    //Hash the password
+    const salt = await bcrypt.genSalt(+this.configService.get<number>('BCRYPT_ROUND'));
+    return await bcrypt.hash(plainPassword, salt);
   }
 }
