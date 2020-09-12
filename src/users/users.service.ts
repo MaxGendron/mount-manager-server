@@ -167,7 +167,7 @@ export class UsersService {
     return new UserResponseDto(updatedUser._id, updatedUser.username, updatedUser.email);
   }
 
-  async hashPassword(plainPassword: string) : Promise<string> {
+  async hashPassword(plainPassword: string): Promise<string> {
     //Hash the password
     const salt = await bcrypt.genSalt(+this.configService.get<number>('BCRYPT_ROUND'));
     return await bcrypt.hash(plainPassword, salt);
