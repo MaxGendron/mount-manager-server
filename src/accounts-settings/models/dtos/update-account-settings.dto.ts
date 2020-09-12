@@ -3,7 +3,7 @@ import { IsOptional, IsEnum } from 'class-validator';
 
 export class UpdateAccountSettingsDto {
   @IsOptional()
-  username: string;
+  igUsername: string;
 
   @IsOptional()
   serverName: string;

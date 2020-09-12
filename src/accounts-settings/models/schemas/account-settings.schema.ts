@@ -12,7 +12,7 @@ export class AccountSettings extends BaseDocument {
 
   @ApiProperty()
   @Prop()
-  username: string;
+  igUsername: string;
 
   @ApiProperty()
   @Prop()
