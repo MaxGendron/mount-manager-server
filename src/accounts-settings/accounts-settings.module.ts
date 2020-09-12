@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AccountSettingsController } from './account-settings.controller';
-import { AccountSettingsService } from './account-settings.service';
+import { AccountSettingsController } from './accounts-settings.controller';
+import { AccountSettingsService } from './accounts-settings.service';
 import { JwtStrategy } from 'src/users/strategy/jwt.strategy';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AccountSettings, AccountSettingSchema } from './models/schemas/account-settings.schema';

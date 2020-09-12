@@ -10,7 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoggedUserResponseDto } from './models/dtos/responses/logged-user.response.dto';
 import { ExistReponseDto } from './models/dtos/responses/exist.response.dto';
 import { UserRoleEnum } from './models/enum/user-role.enum';
-import { AccountSettingsService } from 'src/account-settings/account-settings.service';
+import { AccountSettingsService } from 'src/accounts-settings/accounts-settings.service';
 import { ThrowExceptionUtils } from 'src/utils/throw-exception.utils';
 import { UserResponseDto } from './models/dtos/responses/user.response.dto';
 import { UpdateUserDto } from './models/dtos/update-user.dto';

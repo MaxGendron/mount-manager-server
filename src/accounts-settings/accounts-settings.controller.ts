@@ -10,32 +10,32 @@ import {
 } from 'src/models/api-response';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { AccountSettings } from './models/schemas/account-settings.schema';
-import { AccountSettingsService } from './account-settings.service';
+import { AccountSettingsService } from './accounts-settings.service';
 import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
 import { UpdateAccountSettingsDto } from './models/dtos/update-account-settings.dto';
 import { User } from 'src/models/decorator/user.decorator';
 
-@ApiTags('Account Settings')
+@ApiTags('Accounts Settings')
 @ApiUnexpectedErrorResponse()
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @CustomApiUnauthorizedResponse()
-@Controller('account-settings')
+@Controller('accounts-settings')
 export class AccountSettingsController {
   constructor(private accountSettingsService: AccountSettingsService) {}
 
   @Put(':id')
   @ApiOperation({
-    summary: 'Update account setting',
-    description: 'Update a existing account setting. - Partial update',
+    summary: 'Update account settings',
+    description: 'Update a existing account settings. - Partial update',
   })
   @ApiOkResponse({
-    description: 'The account setting has been updated',
+    description: 'The account settings has been updated',
     type: AccountSettings,
   })
   @CustomApiBadRequestResponse()
   @CustomApiForbiddenResponse()
-  @CustomApiNotFoundResponse('No account setting found.')
+  @CustomApiNotFoundResponse('No account settings found.')
   updateAccountSettings(
     @Param() mongoIdDto: MongoIdDto,
     @Body() updateAccountSettingDto: UpdateAccountSettingsDto,
@@ -46,14 +46,14 @@ export class AccountSettingsController {
 
   @Get('/find/user-id')
   @ApiOperation({
-    summary: 'Get account setting by userId',
-    description: 'Get a account setting by the userId in the Auth Token',
+    summary: 'Get account settings by userId',
+    description: 'Get a account settings by the userId in the Auth Token',
   })
   @ApiOkResponse({
-    description: 'The account setting has been found and returned',
+    description: 'The account settings has been found and returned',
     type: AccountSettings,
   })
-  @CustomApiNotFoundResponse('No account setting found for the requested userId.')
+  @CustomApiNotFoundResponse('No account settings found for the requested userId.')
   async getAccountSettingsByUserId(@User('_id') userId: string): Promise<AccountSettings> {
     return await this.accountSettingsService.getAccountSettingsByUserId(userId);
   }
