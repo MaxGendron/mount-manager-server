@@ -1,11 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  Logger,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger } from '@nestjs/common';
 
 /*
   Catching exception to add logging & custom status
@@ -19,9 +13,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const path = request.url;
     const status = exception.getStatus();
 
-    Logger.error(
-      `Error when executing route ${path}. Status: ${status}. Name: ${exception.name}.`,
-    );
+    Logger.error(`Error when executing route ${path}. Status: ${status}. Name: ${exception.name}.`);
     Logger.error(`Stack trace: ${exception.stack}.`);
 
     response.status(status).send(exception.getResponse());

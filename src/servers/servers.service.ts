@@ -19,9 +19,7 @@ export class ServersService {
 
   //Update a existing server
   async updateServer(id: string, serverDto: ServerDto): Promise<Server> {
-    const server = await this.serverModel
-      .findByIdAndUpdate(id, serverDto, { new: true })
-      .exec();
+    const server = await this.serverModel.findByIdAndUpdate(id, serverDto, { new: true }).exec();
     if (!server) {
       ThrowExceptionUtils.notFoundException(this.entityType, id);
     }

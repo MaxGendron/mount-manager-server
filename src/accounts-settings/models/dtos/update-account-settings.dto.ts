@@ -1,9 +1,9 @@
 import { MountTypeEnum } from '../enum/mount-type.enum';
 import { IsOptional, IsEnum } from 'class-validator';
 
-export class UpdateAccountSettingDto {
+export class UpdateAccountSettingsDto {
   @IsOptional()
-  username: string;
+  igUsername: string;
 
   @IsOptional()
   serverName: string;

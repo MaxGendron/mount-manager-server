@@ -1,20 +1,11 @@
 import * as express from 'express';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {
-  ValidationPipe,
-  ValidationError,
-  HttpStatus,
-  HttpException,
-} from '@nestjs/common';
+import { ValidationPipe, ValidationError, HttpStatus, HttpException } from '@nestjs/common';
 import { HttpExceptionFilter } from './providers/http-exception.filter';
 import { CustomError } from './models/custom-error';
 import { Logger } from '@nestjs/common';
-import {
-  SwaggerModule,
-  DocumentBuilder,
-  SwaggerCustomOptions,
-} from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder, SwaggerCustomOptions } from '@nestjs/swagger';
 import { MongoExceptionFilter } from './providers/mongo-exception.filter';
 
 async function bootstrap() {
@@ -45,10 +36,7 @@ async function bootstrap() {
         let errorName = 'UndefinedParameter';
         errors.forEach(error => {
           for (const constraint in error.constraints) {
-            if (
-              constraint.includes('matches') ||
-              constraint.includes('isEnum')
-            ) {
+            if (constraint.includes('matches') || constraint.includes('isEnum')) {
               errorName = 'BadParameter';
             }
           }

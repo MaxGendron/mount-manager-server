@@ -6,9 +6,7 @@ import { ServerSchema, Server } from './models/schemas/server.schema';
 import { JwtStrategy } from 'src/users/strategy/jwt.strategy';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Server.name, schema: ServerSchema }]),
-  ],
+  imports: [MongooseModule.forFeature([{ name: Server.name, schema: ServerSchema }])],
   controllers: [ServersController],
   providers: [ServersService, JwtStrategy],
   exports: [ServersService],
