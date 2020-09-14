@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { ServerDto } from './models/dtos/server.dto';
 import { Server } from './models/schemas/server.schema';
-import { ThrowExceptionUtils } from 'src/utils/throw-exception.utils';
+import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 
 @Injectable()
 export class ServersService {

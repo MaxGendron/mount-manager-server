@@ -2,11 +2,11 @@ import * as express from 'express';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, ValidationError, HttpStatus, HttpException } from '@nestjs/common';
-import { HttpExceptionFilter } from './providers/http-exception.filter';
-import { CustomError } from './models/custom-error';
+import { HttpExceptionFilter } from './common/providers/http-exception.filter';
+import { CustomError } from './common/models/custom-error';
 import { Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder, SwaggerCustomOptions } from '@nestjs/swagger';
-import { MongoExceptionFilter } from './providers/mongo-exception.filter';
+import { MongoExceptionFilter } from './common/providers/mongo-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

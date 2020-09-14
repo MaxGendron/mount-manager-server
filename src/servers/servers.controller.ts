@@ -6,7 +6,7 @@ import {
   CustomApiNotFoundResponse,
   CustomApiForbiddenResponse,
   CustomApiUnauthorizedResponse,
-} from 'src/models/api-response';
+} from 'src/common/models/api-response';
 import {
   ApiTags,
   ApiOperation,
@@ -17,11 +17,11 @@ import {
 } from '@nestjs/swagger';
 import { ServerDto } from './models/dtos/server.dto';
 import { Server } from './models/schemas/server.schema';
-import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
+import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/users/guards/roles.guard';
 import { UserRoleEnum } from 'src/users/models/enum/user-role.enum';
-import { Roles } from 'src/models/decorator/roles.decorator';
+import { Roles } from 'src/common/models/decorator/roles.decorator';
 
 @ApiTags('Servers')
 @ApiUnexpectedErrorResponse()

@@ -4,14 +4,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './models/schemas/user.schema';
 import { RegisterDto } from './models/dtos/register.dto';
-import { CustomError } from 'src/models/custom-error';
+import { CustomError } from 'src/common/models/custom-error';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { LoggedUserResponseDto } from './models/dtos/responses/logged-user.response.dto';
 import { ExistReponseDto } from './models/dtos/responses/exist.response.dto';
 import { UserRoleEnum } from './models/enum/user-role.enum';
 import { AccountSettingsService } from 'src/accounts-settings/accounts-settings.service';
-import { ThrowExceptionUtils } from 'src/utils/throw-exception.utils';
+import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { UserResponseDto } from './models/dtos/responses/user.response.dto';
 import { UpdateUserDto } from './models/dtos/update-user.dto';
 

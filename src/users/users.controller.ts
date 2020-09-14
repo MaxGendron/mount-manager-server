@@ -13,13 +13,13 @@ import {
   CustomApiNotFoundResponse,
   CustomApiUnauthorizedResponse,
   CustomApiForbiddenResponse,
-} from 'src/models/api-response';
+} from 'src/common/models/api-response';
 import { ValidateUserPropertyValueDto } from './models/dtos/validate-user-property-value.dto';
 import { UserPropertyEnum } from './models/enum/user-property.enum';
 import { UserResponseDto } from './models/dtos/responses/user.response.dto';
-import { User } from 'src/models/decorator/user.decorator';
+import { User } from 'src/common/models/decorator/user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
+import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
 import { UpdateUserDto } from './models/dtos/update-user.dto';
 
 @ApiTags('Users')
