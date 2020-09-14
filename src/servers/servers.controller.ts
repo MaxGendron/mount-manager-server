@@ -61,7 +61,7 @@ export class ServersController {
     type: Server,
   })
   @CustomApiBadRequestResponse()
-  @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiNotFoundResponse('No server found.')
   @CustomApiForbiddenResponse()
   updateServer(@Param() mongoIdDto: MongoIdDto, @Body() serverDto: ServerDto): Promise<Server> {
     return this.serversService.updateServer(mongoIdDto.id, serverDto);
@@ -79,7 +79,7 @@ export class ServersController {
     description: 'The server has been deleted',
   })
   @CustomApiBadRequestResponse()
-  @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiNotFoundResponse('No server found.')
   @CustomApiForbiddenResponse()
   async deleteServer(@Param() mongoIdDto: MongoIdDto): Promise<void> {
     await this.serversService.deleteServer(mongoIdDto.id);
@@ -95,7 +95,7 @@ export class ServersController {
     type: Server,
   })
   @CustomApiBadRequestResponse()
-  @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiNotFoundResponse('No server found.')
   getServerById(@Param() mongoIdDto: MongoIdDto): Promise<Server> {
     return this.serversService.getServerById(mongoIdDto.id);
   }
