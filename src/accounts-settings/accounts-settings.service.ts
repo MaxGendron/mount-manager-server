@@ -6,7 +6,7 @@ import { UpdateAccountSettingsDto } from './models/dtos/update-account-settings.
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { ServersService } from 'src/servers/servers.service';
 import { CustomError } from 'src/common/models/custom-error';
-import { MountTypeEnum } from './models/enum/mount-type.enum';
+import { MountTypeEnum } from '../mounts/models/enum/mount-type.enum';
 
 @Injectable()
 export class AccountSettingsService {
