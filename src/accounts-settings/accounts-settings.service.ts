@@ -73,4 +73,18 @@ export class AccountSettingsService {
     newAccountSettings.mountTypes = mountTypes;
     return newAccountSettings.save();
   }
+
+  //Verify that the given mountType exist in mountTypes
+  verifyMountTypes(mountTypes: string[], mountType: string): void {
+    if (!mountTypes.includes(mountType)) {
+      throw new HttpException(
+        new CustomError(
+          HttpStatus.BAD_REQUEST,
+          'BadParameter',
+          `mountType is invalid, the requested mountType isn't in the accountSettings of the user`,
+        ),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

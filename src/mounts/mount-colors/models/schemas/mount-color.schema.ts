@@ -7,7 +7,7 @@ import { MountTypeEnum } from 'src/mounts/models/enum/mount-type.enum';
 export class MountColor extends BaseDocument {
   @ApiProperty()
   @Prop()
-  colorName: string;
+  color: string;
 
   @ApiProperty()
   @Prop()
