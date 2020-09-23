@@ -24,7 +24,7 @@ import { MountColorsModule } from './mounts/mount-colors/mount-colors.module';
     ServersModule,
     AccountSettingsModule,
     MountsModule,
-    MountColorsModule
+    MountColorsModule,
   ],
 })
 export class AppModule {}

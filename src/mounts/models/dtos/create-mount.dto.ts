@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty } from "class-validator";
-import { MountGenderEnum } from "../enum/mount-gender.enum";
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { MountGenderEnum } from '../enum/mount-gender.enum';
 
 export class CreateMountDto {
   @IsNotEmpty()
@@ -7,8 +7,8 @@ export class CreateMountDto {
 
   @IsNotEmpty()
   colorId: string;
-  
+
   @IsNotEmpty()
   @IsEnum(MountGenderEnum, { each: true })
-  gender: MountGenderEnum
+  gender: MountGenderEnum;
 }

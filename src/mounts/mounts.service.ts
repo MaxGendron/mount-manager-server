@@ -1,8 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AccountSettingsService } from 'src/accounts-settings/accounts-settings.service';
-import { CustomError } from 'src/common/models/custom-error';
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { CreateMountDto } from './models/dtos/create-mount.dto';
 import { UpdateMountDto } from './models/dtos/update-mount.dto';
@@ -16,14 +15,14 @@ export class MountsService {
   constructor(
     @InjectModel(Mount.name) private mountModel: Model<Mount>,
     private accountSettingsService: AccountSettingsService,
-    private mountColorsService: MountColorsService
+    private mountColorsService: MountColorsService,
   ) {}
 
   //Create moutn
   async createMount(createMountDto: CreateMountDto, userId: string): Promise<Mount> {
     const mountColor = await this.mountColorsService.getMountColorById(createMountDto.colorId);
-    
-    //Check if mountType is in list of user mountTypes (in account-settings) 
+
+    //Check if mountType is in list of user mountTypes (in account-settings)
     const accountSettings = await this.accountSettingsService.getAccountSettingsByUserId(userId);
     this.accountSettingsService.verifyMountTypes(accountSettings.mountTypes, mountColor.mountType);
 
@@ -41,7 +40,7 @@ export class MountsService {
     if (updateMountDto.colorId) {
       const mountColor = await this.mountColorsService.getMountColorById(updateMountDto.colorId);
 
-      //Check if mountType is in list of user mountTypes (in account-settings) 
+      //Check if mountType is in list of user mountTypes (in account-settings)
       const accountSettings = await this.accountSettingsService.getAccountSettingsByUserId(userId);
       this.accountSettingsService.verifyMountTypes(accountSettings.mountTypes, mountColor.mountType);
 

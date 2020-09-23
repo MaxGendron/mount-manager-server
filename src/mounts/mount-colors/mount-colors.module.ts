@@ -9,6 +9,6 @@ import { MountColorsService } from './mount-colors.service';
   imports: [MongooseModule.forFeature([{ name: MountColor.name, schema: MountColorSchema }])],
   controllers: [MountColorsController],
   providers: [MountColorsService, JwtStrategy],
-  exports: [MountColorsService]
+  exports: [MountColorsService],
 })
 export class MountColorsModule {}

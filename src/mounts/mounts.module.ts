@@ -7,8 +7,12 @@ import { MountsController } from './mounts.controller';
 import { MountsService } from './mounts.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Mount.name, schema: MountSchema }]), MountColorsModule, AccountSettingsModule],
+  imports: [
+    MongooseModule.forFeature([{ name: Mount.name, schema: MountSchema }]),
+    MountColorsModule,
+    AccountSettingsModule,
+  ],
   controllers: [MountsController],
-  providers: [MountsService]
+  providers: [MountsService],
 })
 export class MountsModule {}
