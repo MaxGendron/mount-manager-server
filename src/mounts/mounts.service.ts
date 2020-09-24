@@ -30,6 +30,7 @@ export class MountsService {
     const newMount = new this.mountModel(createMountDto);
     newMount.color = mountColor.color;
     newMount.type = mountColor.mountType;
+    newMount.userId = userId;
     return newMount.save();
   }
 
@@ -48,6 +49,9 @@ export class MountsService {
       mount.type = mountColor.mountType;
     }
 
+    mount.name = updateMountDto.name ?? mount.name;
+    mount.gender = updateMountDto.gender ?? mount.gender;
+
     return this.mountModel.findByIdAndUpdate(id, mount, { new: true }).exec();
   }
 
@@ -57,7 +61,7 @@ export class MountsService {
     await this.mountModel.findByIdAndRemove(id).exec();
   }
 
-  //Get a mount by is id then validate that the it exist and the userIds are the same
+  //Get a mount by is id then validate that it exist and the userIds are the same
   async getMountById(id: string, userId: string): Promise<Mount> {
     const mount = await this.mountModel.findById(id).exec();
     if (!mount) {
