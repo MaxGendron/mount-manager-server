@@ -86,7 +86,7 @@ export class MountColorsController {
     await this.mountColorsService.deleteMountColor(mongoIdDto.id);
   }
 
-  @Get(':mountType')
+  @Get('type/:mountType')
   @ApiOperation({
     summary: 'Get mount colors for mountType',
     description: 'Get all the mount colors for a specified mountType.',
@@ -94,6 +94,7 @@ export class MountColorsController {
   @ApiOkResponse({
     description: 'The mount colors have been found and returned',
     type: MountColor,
+    isArray: true
   })
   @CustomApiBadRequestResponse()
   @CustomApiNotFoundResponse('No mount colors found.')

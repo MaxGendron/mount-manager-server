@@ -105,6 +105,7 @@ export class ServersController {
   @ApiOkResponse({
     description: 'The servers have been found and returned',
     type: Server,
+    isArray: true
   })
   getServers(): Promise<Server[]> {
     return this.serversService.getServers();
