@@ -3,7 +3,7 @@ import { MountTypeEnum } from 'src/mounts/models/enum/mount-type.enum';
 
 export class MountColorDto {
   @IsNotEmpty()
-  colorName: string;
+  color: string;
 
   @IsNotEmpty()
   @IsEnum(MountTypeEnum)
