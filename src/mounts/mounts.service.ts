@@ -18,7 +18,7 @@ export class MountsService {
     private mountColorsService: MountColorsService,
   ) {}
 
-  //Create moutn
+  //Create mount
   async createMount(createMountDto: CreateMountDto, userId: string): Promise<Mount> {
     const mountColor = await this.mountColorsService.getMountColorById(createMountDto.colorId);
 

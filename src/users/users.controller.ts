@@ -103,7 +103,7 @@ export class UsersController {
     description: 'The user has been updated',
     type: UserResponseDto,
   })
-  @CustomApiBadRequestResponse()
+  @CustomApiBadRequestResponse('Cannot Insert the requested user, verify your information.')
   @CustomApiForbiddenResponse()
   @CustomApiUnauthorizedResponse()
   @CustomApiNotFoundResponse('No user found.')
