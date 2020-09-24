@@ -94,7 +94,7 @@ export class MountColorsController {
   @ApiOkResponse({
     description: 'The mount colors have been returned',
     type: MountColor,
-    isArray: true
+    isArray: true,
   })
   @CustomApiBadRequestResponse()
   getMountColorsByMountType(@Param() mountTypeEnumDto: MountTypeEnumDto): Promise<MountColor[]> {

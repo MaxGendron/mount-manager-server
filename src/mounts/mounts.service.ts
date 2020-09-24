@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { AccountSettingsService } from 'src/accounts-settings/accounts-settings.service';
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { CreateMountDto } from './models/dtos/create-mount.dto';
+import { MountGenderCountResponseDto } from './models/dtos/responses/mount-gender-count.response.dto';
 import { UpdateMountDto } from './models/dtos/update-mount.dto';
 import { Mount } from './models/schemas/mount.schema';
 import { MountColorsService } from './mount-colors/mount-colors.service';
@@ -77,5 +78,56 @@ export class MountsService {
   //Get the list of mounts associated to a userId
   getMountsForUserId(userId: string): Promise<Mount[]> {
     return this.mountModel.find({ userId: userId }).exec();
+  }
+
+  /*
+  Group by type & userId, then get the sum of male/female
+  based on if the record is equal to male or female.
+  Then take the field "type" from the _id and put it at the root
+  of the document.
+  */
+  genderCountByTypeForUserId(userId: string): Promise<MountGenderCountResponseDto[]> {
+    return this.mountModel
+      .aggregate([
+        {
+          $group: {
+            _id: {
+              type: '$type',
+              userId: `${userId}`,
+            },
+            male: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ['male', '$gender'],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+            female: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ['female', '$gender'],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            type: '$_id.type',
+            _id: 0,
+            male: 1,
+            female: 1,
+          },
+        },
+      ])
+      .exec();
   }
 }

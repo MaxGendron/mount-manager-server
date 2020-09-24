@@ -1,11 +1,25 @@
 import { Body, Controller, HttpCode, Param, UseGuards } from '@nestjs/common';
 import { Delete, Get, Post, Put } from '@nestjs/common/decorators/http/request-mapping.decorator';
-import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ApiUnexpectedErrorResponse, CustomApiBadRequestResponse, CustomApiForbiddenResponse, CustomApiNotFoundResponse, CustomApiUnauthorizedResponse } from 'src/common/models/api-response';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
+  ApiUnexpectedErrorResponse,
+  CustomApiBadRequestResponse,
+  CustomApiForbiddenResponse,
+  CustomApiNotFoundResponse,
+  CustomApiUnauthorizedResponse,
+} from 'src/common/models/api-response';
 import { User } from 'src/common/models/decorator/user.decorator';
 import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { CreateMountDto } from './models/dtos/create-mount.dto';
+import { MountGenderCountResponseDto } from './models/dtos/responses/mount-gender-count.response.dto';
 import { UpdateMountDto } from './models/dtos/update-mount.dto';
 import { Mount } from './models/schemas/mount.schema';
 import { MountsService } from './mounts.service';
@@ -17,9 +31,8 @@ import { MountsService } from './mounts.service';
 @UseGuards(JwtAuthGuard)
 @Controller('mounts')
 export class MountsController {
-
   constructor(private mountsService: MountsService) {}
-  
+
   @Post()
   @ApiOperation({
     summary: 'Create mount',
@@ -47,7 +60,11 @@ export class MountsController {
   @CustomApiBadRequestResponse()
   @CustomApiForbiddenResponse()
   @CustomApiNotFoundResponse('No mount found. / No mount color found for the colorId.')
-  updateMount(@Body() updateMountDto: UpdateMountDto, @Param() mongoIdDto: MongoIdDto, @User('_id') userId: string): Promise<Mount> {
+  updateMount(
+    @Body() updateMountDto: UpdateMountDto,
+    @Param() mongoIdDto: MongoIdDto,
+    @User('_id') userId: string,
+  ): Promise<Mount> {
     return this.mountsService.updateMount(updateMountDto, mongoIdDto.id, userId);
   }
 
@@ -74,7 +91,7 @@ export class MountsController {
   })
   @ApiOkResponse({
     description: 'The mount have been found and returned',
-    type: Mount
+    type: Mount,
   })
   @CustomApiBadRequestResponse()
   @CustomApiForbiddenResponse()
@@ -83,16 +100,31 @@ export class MountsController {
     return this.mountsService.getMountById(mongoIdDto.id, userId);
   }
 
-  @Get("find/user-id")
+  @Get('find/user-id')
   @ApiOperation({
     summary: 'Get mounts for userId',
-    description: 'Get all the mounts for the userId of the user requesting the call.',
+    description: 'Get all the mounts for the userId in the Auth Token.',
   })
   @ApiOkResponse({
-    description: 'The mount have been found and returned',
-    type: Mount
+    description: 'The mounts have been returned',
+    type: Mount,
+    isArray: true,
   })
   getMountsForUserId(@User('_id') userId: string): Promise<Mount[]> {
     return this.mountsService.getMountsForUserId(userId);
+  }
+
+  @Get('stats/gender-count')
+  @ApiOperation({
+    summary: 'Get gender count of mounts by type for userId',
+    description: 'Get the count of each gender of mounts, by type, for the userId in the Auth Token.',
+  })
+  @ApiOkResponse({
+    description: 'The counts have been returned',
+    type: MountGenderCountResponseDto,
+    isArray: true,
+  })
+  genderCountByTypeForUserId(@User('_id') userId: string): Promise<MountGenderCountResponseDto[]> {
+    return this.mountsService.genderCountByTypeForUserId(userId);
   }
 }
