@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import { ObjectId } from 'mongoose';
 import { BaseDocument } from 'src/common/models/base-document';
 import { MountTypeEnum } from 'src/mounts/models/enum/mount-type.enum';
 import { MountGenderEnum } from '../enum/mount-gender.enum';
@@ -18,9 +19,9 @@ export class Mount extends BaseDocument {
   @Prop()
   color: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: String })
   @Prop()
-  userId: string;
+  userId: ObjectId;
 
   @ApiProperty()
   @Prop()
