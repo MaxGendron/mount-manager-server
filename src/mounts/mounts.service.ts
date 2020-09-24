@@ -36,8 +36,8 @@ export class MountsService {
   }
 
   //Update mount
-  async updateMount(updateMountDto: UpdateMountDto, id: string, userId: string): Promise<Mount> {
-    const mount = await this.getMountById(id, userId);
+  async updateMount(updateMountDto: UpdateMountDto, mountId: string, userId: string): Promise<Mount> {
+    const mount = await this.getMountById(mountId, userId);
 
     if (updateMountDto.colorId) {
       const mountColor = await this.mountColorsService.getMountColorById(updateMountDto.colorId);
@@ -53,20 +53,20 @@ export class MountsService {
     mount.name = updateMountDto.name ?? mount.name;
     mount.gender = updateMountDto.gender ?? mount.gender;
 
-    return this.mountModel.findByIdAndUpdate(id, mount, { new: true }).exec();
+    return this.mountModel.findByIdAndUpdate(mountId, mount, { new: true }).exec();
   }
 
   //Delete mount
-  async deleteMount(id: string, userId: string): Promise<void> {
-    await this.getMountById(id, userId);
-    await this.mountModel.findByIdAndRemove(id).exec();
+  async deleteMount(mountId: string, userId: string): Promise<void> {
+    await this.getMountById(mountId, userId);
+    await this.mountModel.findByIdAndRemove(mountId).exec();
   }
 
   //Get a mount by is id then validate that it exist and the userIds are the same
-  async getMountById(id: string, userId: string): Promise<Mount> {
-    const mount = await this.mountModel.findById(id).exec();
+  async getMountById(mountId: string, userId: string): Promise<Mount> {
+    const mount = await this.mountModel.findById(mountId).exec();
     if (!mount) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
+      ThrowExceptionUtils.notFoundException(this.entityType, mountId);
     }
     //If the user who requested isn't the same as the one returned, throw exception
     if (mount.userId != userId) {

@@ -19,19 +19,19 @@ export class MountColorsService {
   }
 
   //Update a existing mountColor
-  async updateMountColor(id: string, mountColorDto: MountColorDto): Promise<MountColor> {
-    const mountColor = await this.mountColorModel.findByIdAndUpdate(id, mountColorDto, { new: true }).exec();
+  async updateMountColor(mountColorId: string, mountColorDto: MountColorDto): Promise<MountColor> {
+    const mountColor = await this.mountColorModel.findByIdAndUpdate(mountColorId, mountColorDto, { new: true }).exec();
     if (!mountColor) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
+      ThrowExceptionUtils.notFoundException(this.entityType, mountColorId);
     }
     return mountColor;
   }
 
   //Delete a existing mountColor
-  async deleteMountColor(id: string): Promise<void> {
-    const mountColor = await this.mountColorModel.findByIdAndRemove(id).exec();
+  async deleteMountColor(mountColorId: string): Promise<void> {
+    const mountColor = await this.mountColorModel.findByIdAndRemove(mountColorId).exec();
     if (!mountColor) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
+      ThrowExceptionUtils.notFoundException(this.entityType, mountColorId);
     }
     return mountColor;
   }
@@ -42,10 +42,10 @@ export class MountColorsService {
   }
 
   //Get a mountColor by is id
-  async getMountColorById(id: string): Promise<MountColor> {
-    const mountColor = await this.mountColorModel.findById(id).exec();
+  async getMountColorById(mountColorId: string): Promise<MountColor> {
+    const mountColor = await this.mountColorModel.findById(mountColorId).exec();
     if (!mountColor) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
+      ThrowExceptionUtils.notFoundException(this.entityType, mountColorId);
     }
     return mountColor;
   }

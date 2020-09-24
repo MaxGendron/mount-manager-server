@@ -21,7 +21,7 @@ export class AccountSettingsService {
   //Update a existing accountSettings
   async updateAccountSettings(
     userId: string,
-    id: string,
+    accountSettingsId: string,
     updateAccountSettingsDto: UpdateAccountSettingsDto,
   ): Promise<AccountSettings> {
     //Validate the server, only if updated
@@ -29,17 +29,17 @@ export class AccountSettingsService {
       await this.validateServerName(updateAccountSettingsDto.serverName);
     }
 
-    const accountSetting = await this.accountSettingsModel.findById(id).exec();
+    const accountSetting = await this.accountSettingsModel.findById(accountSettingsId).exec();
 
     if (!accountSetting) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
+      ThrowExceptionUtils.notFoundException(this.entityType, accountSettingsId);
     }
     //If the user who requested isn't the same as the one returned, throw exception
     if (accountSetting.userId != userId) {
       ThrowExceptionUtils.forbidden();
     }
 
-    return this.accountSettingsModel.findByIdAndUpdate(id, updateAccountSettingsDto, { new: true }).exec();
+    return this.accountSettingsModel.findByIdAndUpdate(accountSettingsId, updateAccountSettingsDto, { new: true }).exec();
   }
 
   //Validate that the requested server exist
