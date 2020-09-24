@@ -47,7 +47,7 @@ export class AccountSettingsController {
   @Get('/find/user-id')
   @ApiOperation({
     summary: 'Get account settings by userId',
-    description: 'Get a account settings by the userId in the Auth Token',
+    description: 'Get a account settings by the userId in the Auth Token.',
   })
   @ApiOkResponse({
     description: 'The account settings has been found and returned',

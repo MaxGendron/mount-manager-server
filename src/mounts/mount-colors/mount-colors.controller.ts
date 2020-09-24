@@ -92,12 +92,11 @@ export class MountColorsController {
     description: 'Get all the mount colors for a specified mountType.',
   })
   @ApiOkResponse({
-    description: 'The mount colors have been found and returned',
+    description: 'The mount colors have been returned',
     type: MountColor,
     isArray: true
   })
   @CustomApiBadRequestResponse()
-  @CustomApiNotFoundResponse('No mount colors found.')
   getMountColorsByMountType(@Param() mountTypeEnumDto: MountTypeEnumDto): Promise<MountColor[]> {
     return this.mountColorsService.getMountColorsByMountType(mountTypeEnumDto.mountType);
   }

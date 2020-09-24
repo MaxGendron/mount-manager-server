@@ -103,7 +103,7 @@ export class ServersController {
   @Get()
   @ApiOperation({ summary: 'Get servers', description: 'Get all the servers.' })
   @ApiOkResponse({
-    description: 'The servers have been found and returned',
+    description: 'The servers have been returned',
     type: Server,
     isArray: true
   })
