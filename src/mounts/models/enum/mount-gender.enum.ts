@@ -1,4 +1,4 @@
 export enum MountGenderEnum {
-  Girl = 'girl',
-  Boy = 'boy',
+  Male = 'male',
+  Female = 'female',
 }
