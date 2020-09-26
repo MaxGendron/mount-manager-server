@@ -1,3 +1,4 @@
+import { ColorLocalize } from '../../mount-colors/models/color-localize';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
@@ -17,7 +18,7 @@ export class Mount extends BaseDocument {
 
   @ApiProperty()
   @Prop()
-  color: string;
+  color: ColorLocalize;
 
   @ApiProperty({ type: String })
   @Prop()

@@ -36,7 +36,6 @@ async function bootstrap() {
         let errorName = 'UndefinedParameter';
         errors.forEach(error => {
           for (const constraint in error.constraints) {
-            console.log(constraint);
             if (constraint.includes('matches') || constraint.includes('isEnum') || constraint.includes('maxLength')) {
               errorName = 'BadParameter';
             }
