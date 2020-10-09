@@ -39,7 +39,9 @@ export class AccountSettingsService {
       ThrowExceptionUtils.forbidden();
     }
 
-    return this.accountSettingsModel.findByIdAndUpdate(accountSettingsId, updateAccountSettingsDto, { new: true }).exec();
+    return this.accountSettingsModel
+      .findByIdAndUpdate(accountSettingsId, updateAccountSettingsDto, { new: true })
+      .exec();
   }
 
   //Validate that the requested server exist

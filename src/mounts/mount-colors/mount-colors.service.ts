@@ -38,23 +38,25 @@ export class MountColorsService {
 
   //Get all the mountColors grouped by mountType
   getMountColorsGroupedByMountType(): Promise<MountColorGroupedByResponseDto[]> {
-    return this.mountColorModel.aggregate([
-      {
-        $group: {
-          _id: '$mountType', 
-          color: {
-            $push: '$color'
-          }
+    return this.mountColorModel
+      .aggregate([
+        {
+          $group: {
+            _id: '$mountType',
+            colors: {
+              $push: '$$ROOT',
+            },
+          },
         },
-      },
-      {
-        $project: {
-          type: '$_id',
-          _id: 0,
-          color: 1,
+        {
+          $project: {
+            type: '$_id',
+            _id: 0,
+            colors: 1,
+          },
         },
-      },
-    ]).exec();
+      ])
+      .exec();
   }
 
   //Get a mountColor by is id
