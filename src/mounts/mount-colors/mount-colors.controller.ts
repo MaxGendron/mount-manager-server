@@ -16,11 +16,11 @@ import {
 } from 'src/common/models/api-response';
 import { Roles } from 'src/common/models/decorator/roles.decorator';
 import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
-import { MountTypeEnumDto } from 'src/mounts/models/dtos/mount-type.enum.dto';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/users/guards/roles.guard';
 import { UserRoleEnum } from 'src/users/models/enum/user-role.enum';
 import { MountColorDto } from './models/dtos/mount-color.dto';
+import { MountColorGroupedByResponseDto } from './models/dtos/responses/mount-color-grouped-by.response.dto';
 import { MountColor } from './models/schemas/mount-color.schema';
 import { MountColorsService } from './mount-colors.service';
 
@@ -86,18 +86,18 @@ export class MountColorsController {
     await this.mountColorsService.deleteMountColor(mongoIdDto.id);
   }
 
-  @Get('find/type/:mountType')
+  @Get('group/type')
   @ApiOperation({
-    summary: 'Get mount colors for mountType',
-    description: 'Get all the mount colors for a specified mountType.',
+    summary: 'Get mount colors grouped by mountType',
+    description: 'Get all the mount colors grouped by each mountType.',
   })
   @ApiOkResponse({
     description: 'The mount colors have been returned',
-    type: MountColor,
+    type: MountColorGroupedByResponseDto,
     isArray: true,
   })
   @CustomApiBadRequestResponse()
-  getMountColorsByMountType(@Param() mountTypeEnumDto: MountTypeEnumDto): Promise<MountColor[]> {
-    return this.mountColorsService.getMountColorsByMountType(mountTypeEnumDto.mountType);
+  getMountColorsGroupedByMountType(): Promise<MountColorGroupedByResponseDto[]> {
+    return this.mountColorsService.getMountColorsGroupedByMountType();
   }
 }

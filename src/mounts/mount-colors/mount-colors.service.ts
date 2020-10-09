@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
-import { MountTypeEnum } from 'src/mounts/models/enum/mount-type.enum';
 import { MountColorDto } from './models/dtos/mount-color.dto';
+import { MountColorGroupedByResponseDto } from './models/dtos/responses/mount-color-grouped-by.response.dto';
 import { MountColor } from './models/schemas/mount-color.schema';
 
 @Injectable()
@@ -36,9 +36,25 @@ export class MountColorsService {
     return mountColor;
   }
 
-  //Get all the mountColors for a mountType
-  getMountColorsByMountType(mountType: MountTypeEnum): Promise<MountColor[]> {
-    return this.mountColorModel.find({ mountType: mountType }).exec();
+  //Get all the mountColors grouped by mountType
+  getMountColorsGroupedByMountType(): Promise<MountColorGroupedByResponseDto[]> {
+    return this.mountColorModel.aggregate([
+      {
+        $group: {
+          _id: '$mountType', 
+          color: {
+            $push: '$color'
+          }
+        },
+      },
+      {
+        $project: {
+          type: '$_id',
+          _id: 0,
+          color: 1,
+        },
+      },
+    ]).exec();
   }
 
   //Get a mountColor by is id
