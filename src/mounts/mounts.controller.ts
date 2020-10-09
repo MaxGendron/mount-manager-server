@@ -51,7 +51,7 @@ export class MountsController {
   @Put(':id')
   @ApiOperation({
     summary: 'Update mount',
-    description: 'Update a existing mount.',
+    description: 'Update a existing mount. - Partial Update',
   })
   @ApiOkResponse({
     description: 'The mount has been updated',
