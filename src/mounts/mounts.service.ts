@@ -127,6 +127,11 @@ export class MountsService {
             female: 1,
           },
         },
+        {
+          $sort: {
+            type: 1,
+          },
+        },
       ])
       .exec();
   }
