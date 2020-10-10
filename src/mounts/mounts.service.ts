@@ -99,7 +99,7 @@ export class MountsService {
               $sum: {
                 $cond: [
                   {
-                    $eq: ['male', '$gender'],
+                    $eq: ['Male', '$gender'],
                   },
                   1,
                   0,
@@ -110,7 +110,7 @@ export class MountsService {
               $sum: {
                 $cond: [
                   {
-                    $eq: ['female', '$gender'],
+                    $eq: ['Female', '$gender'],
                   },
                   1,
                   0,
