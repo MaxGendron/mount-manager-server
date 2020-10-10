@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { AccountSettingsService } from 'src/accounts-settings/accounts-settings.service';
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { CreateMountDto } from './models/dtos/create-mount.dto';
@@ -90,11 +90,13 @@ export class MountsService {
     return this.mountModel
       .aggregate([
         {
+          $match: {
+            userId: new Types.ObjectId(`${userId}`)
+          }
+        },
+        {
           $group: {
-            _id: {
-              type: '$type',
-              userId: `${userId}`,
-            },
+            _id: '$type',
             male: {
               $sum: {
                 $cond: [
@@ -121,7 +123,7 @@ export class MountsService {
         },
         {
           $project: {
-            type: '$_id.type',
+            type: '$_id',
             _id: 0,
             male: 1,
             female: 1,
