@@ -47,6 +47,7 @@ export class MountsService {
       this.accountSettingsService.verifyMountTypes(accountSettings.mountTypes, mountColor.mountType);
 
       mount.color = mountColor.color;
+      mount.colorId = mountColor._id;
       mount.type = mountColor.mountType;
     }
 

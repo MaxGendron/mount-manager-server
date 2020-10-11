@@ -24,6 +24,10 @@ export class Mount extends BaseDocument {
   @Prop()
   userId: ObjectId;
 
+  @ApiProperty({ type: String })
+  @Prop()
+  colorId: ObjectId;
+
   @ApiProperty()
   @Prop()
   type: MountTypeEnum;
