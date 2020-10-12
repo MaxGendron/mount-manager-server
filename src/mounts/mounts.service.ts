@@ -84,25 +84,27 @@ export class MountsService {
   Filter/sort if needed. Default sorting is name ASC
   */
   async getMountsForUserId(searchMountDto: SearchMountDto, userId: string): Promise<Mount[]> {
-    const query = await this.createSearchQuery(searchMountDto)
+    const query = await this.createSearchQuery(searchMountDto);
 
     //Set sort
     const sortField = searchMountDto.sortField ?? MountSortFieldEnum.Name;
     const sortOrder = +(searchMountDto.sortOrder ?? SortOrderEnum.Asc);
 
-    return this.mountModel.aggregate([
-      {
-        $match: {
-          userId: new Types.ObjectId(`${userId}`),
-          $and: query
-        }
-      },
-      {
-        $sort: {
-          [sortField]: sortOrder,
+    return this.mountModel
+      .aggregate([
+        {
+          $match: {
+            userId: new Types.ObjectId(`${userId}`),
+            $and: query,
+          },
         },
-      },
-    ]).exec();
+        {
+          $sort: {
+            [sortField]: sortOrder,
+          },
+        },
+      ])
+      .exec();
   }
 
   /*
@@ -116,8 +118,8 @@ export class MountsService {
       .aggregate([
         {
           $match: {
-            userId: new Types.ObjectId(`${userId}`)
-          }
+            userId: new Types.ObjectId(`${userId}`),
+          },
         },
         {
           $group: {
@@ -169,11 +171,10 @@ export class MountsService {
     let index = 0;
 
     //Set filters
-    if (searchMountDto.colorId)
-    {
+    if (searchMountDto.colorId) {
       const mountColor = await this.mountColorsService.getMountColorById(searchMountDto.colorId);
       query.push({});
-      query[index].colorId = mountColor._id
+      query[index].colorId = mountColor._id;
       index++;
     }
     if (searchMountDto.gender) {
