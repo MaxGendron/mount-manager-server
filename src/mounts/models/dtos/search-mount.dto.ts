@@ -2,7 +2,7 @@ import { SortOrderEnum } from './../../../common/models/enum/sort-order.enum';
 import { MountTypeEnum } from './../enum/mount-type.enum';
 import { MountGenderEnum } from './../enum/mount-gender.enum';
 import { MountSortFieldEnum } from '../enum/mount-sort-field.enum';
-import { IsMongoId, IsOptional } from 'class-validator';
+import { IsMongoId, IsOptional, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SearchMountDto {
@@ -17,6 +17,7 @@ export class SearchMountDto {
 
   //Search
   @IsOptional()
+  @MaxLength(16)
   @ApiProperty({ required: false })
   name: string;
 
