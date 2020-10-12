@@ -1,3 +1,4 @@
+import { MountSortFieldEnum } from './models/enum/mount-sort-field.enum';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -5,9 +6,11 @@ import { AccountSettingsService } from 'src/accounts-settings/accounts-settings.
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { CreateMountDto } from './models/dtos/create-mount.dto';
 import { MountGenderCountResponseDto } from './models/dtos/responses/mount-gender-count.response.dto';
+import { SearchMountDto } from './models/dtos/search-mount.dto';
 import { UpdateMountDto } from './models/dtos/update-mount.dto';
 import { Mount } from './models/schemas/mount.schema';
 import { MountColorsService } from './mount-colors/mount-colors.service';
+import { SortOrderEnum } from 'src/common/models/enum/sort-order.enum';
 
 @Injectable()
 export class MountsService {
@@ -76,9 +79,30 @@ export class MountsService {
     return mount;
   }
 
-  //Get the list of mounts associated to a userId
-  getMountsForUserId(userId: string): Promise<Mount[]> {
-    return this.mountModel.find({ userId: userId }).exec();
+  /*
+  Get the list of mounts associated to a userId
+  Filter/sort if needed. Default sorting is name ASC
+  */
+  async getMountsForUserId(searchMountDto: SearchMountDto, userId: string): Promise<Mount[]> {
+    const query = await this.createSearchQuery(searchMountDto)
+
+    //Set sort
+    const sortField = searchMountDto.sortField ?? MountSortFieldEnum.Name;
+    const sortOrder = +(searchMountDto.sortOrder ?? SortOrderEnum.Asc);
+
+    return this.mountModel.aggregate([
+      {
+        $match: {
+          userId: new Types.ObjectId(`${userId}`),
+          $and: query
+        }
+      },
+      {
+        $sort: {
+          [sortField]: sortOrder,
+        },
+      },
+    ]).exec();
   }
 
   /*
@@ -137,5 +161,38 @@ export class MountsService {
         },
       ])
       .exec();
+  }
+
+  private async createSearchQuery(searchMountDto: SearchMountDto) {
+    // eslint-disable-next-line prefer-const
+    let query = [];
+    let index = 0;
+
+    //Set filters
+    if (searchMountDto.colorId)
+    {
+      const mountColor = await this.mountColorsService.getMountColorById(searchMountDto.colorId);
+      query.push({});
+      query[index].colorId = mountColor._id
+      index++;
+    }
+    if (searchMountDto.gender) {
+      query.push({});
+      query[index].gender = searchMountDto.gender;
+      index++;
+    }
+    if (searchMountDto.type) {
+      query.push({});
+      query[index].type = searchMountDto.type;
+      index++;
+    }
+    if (searchMountDto.name) {
+      query.push({});
+      query[index].name = {};
+      query[index].name.$regex = `^${searchMountDto.name}`;
+      query[index].name.$options = 'i';
+    }
+    //Check if array is empty (mongo don't accept empty array)
+    return query.length === 0 ? [{}] : query;
   }
 }

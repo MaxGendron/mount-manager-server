@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, Param, Query, UseGuards } from '@nestjs/common';
 import { Delete, Get, Post, Put } from '@nestjs/common/decorators/http/request-mapping.decorator';
 import {
   ApiBearerAuth,
@@ -20,6 +20,7 @@ import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { CreateMountDto } from './models/dtos/create-mount.dto';
 import { MountGenderCountResponseDto } from './models/dtos/responses/mount-gender-count.response.dto';
+import { SearchMountDto } from './models/dtos/search-mount.dto';
 import { UpdateMountDto } from './models/dtos/update-mount.dto';
 import { Mount } from './models/schemas/mount.schema';
 import { MountsService } from './mounts.service';
@@ -103,15 +104,15 @@ export class MountsController {
   @Get('find/user-id')
   @ApiOperation({
     summary: 'Get mounts for userId',
-    description: 'Get all the mounts for the userId in the Auth Token.',
+    description: 'Get all the mounts for the userId in the Auth Token. Can sort & filter if needed.',
   })
   @ApiOkResponse({
     description: 'The mounts have been returned',
     type: Mount,
     isArray: true,
   })
-  getMountsForUserId(@User('_id') userId: string): Promise<Mount[]> {
-    return this.mountsService.getMountsForUserId(userId);
+  getMountsForUserId(@Query() searchMountDto: SearchMountDto, @User('_id') userId: string): Promise<Mount[]> {
+    return this.mountsService.getMountsForUserId(searchMountDto, userId);
   }
 
   @Get('stats/gender-count')
