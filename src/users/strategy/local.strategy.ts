@@ -1,7 +1,7 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { CustomError } from 'src/models/custom-error';
+import { CustomError } from 'src/common/models/custom-error';
 import { UsersService } from '../users.service';
 import { User } from '../models/schemas/user.schema';
 

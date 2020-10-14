@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CustomError } from 'src/models/custom-error';
+import { CustomError } from 'src/common/models/custom-error';
 
 //Use this JwtAuthGuard if you wanna restreint a route to a logged in user
 @Injectable()

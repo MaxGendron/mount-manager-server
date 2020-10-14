@@ -1,6 +1,6 @@
 import { IsNotEmpty, Matches, IsEnum, IsOptional } from 'class-validator';
 import { UserRoleEnum } from '../enum/user-role.enum';
-import { MountTypeEnum } from 'src/accounts-settings/models/enum/mount-type.enum';
+import { MountTypeEnum } from 'src/mounts/models/enum/mount-type.enum';
 
 export class RegisterDto {
   @IsNotEmpty()

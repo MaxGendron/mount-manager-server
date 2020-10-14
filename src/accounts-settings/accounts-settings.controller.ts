@@ -7,13 +7,13 @@ import {
   CustomApiNotFoundResponse,
   CustomApiForbiddenResponse,
   CustomApiUnauthorizedResponse,
-} from 'src/models/api-response';
+} from 'src/common/models/api-response';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { AccountSettings } from './models/schemas/account-settings.schema';
 import { AccountSettingsService } from './accounts-settings.service';
-import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
+import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
 import { UpdateAccountSettingsDto } from './models/dtos/update-account-settings.dto';
-import { User } from 'src/models/decorator/user.decorator';
+import { User } from 'src/common/models/decorator/user.decorator';
 
 @ApiTags('Accounts Settings')
 @ApiUnexpectedErrorResponse()
@@ -47,7 +47,7 @@ export class AccountSettingsController {
   @Get('/find/user-id')
   @ApiOperation({
     summary: 'Get account settings by userId',
-    description: 'Get a account settings by the userId in the Auth Token',
+    description: 'Get a account settings by the userId in the Auth Token.',
   })
   @ApiOkResponse({
     description: 'The account settings has been found and returned',

@@ -3,10 +3,10 @@ import { AccountSettings } from './models/schemas/account-settings.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UpdateAccountSettingsDto } from './models/dtos/update-account-settings.dto';
-import { ThrowExceptionUtils } from 'src/utils/throw-exception.utils';
+import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { ServersService } from 'src/servers/servers.service';
-import { CustomError } from 'src/models/custom-error';
-import { MountTypeEnum } from './models/enum/mount-type.enum';
+import { CustomError } from 'src/common/models/custom-error';
+import { MountTypeEnum } from '../mounts/models/enum/mount-type.enum';
 
 @Injectable()
 export class AccountSettingsService {
@@ -21,7 +21,7 @@ export class AccountSettingsService {
   //Update a existing accountSettings
   async updateAccountSettings(
     userId: string,
-    id: string,
+    accountSettingsId: string,
     updateAccountSettingsDto: UpdateAccountSettingsDto,
   ): Promise<AccountSettings> {
     //Validate the server, only if updated
@@ -29,17 +29,19 @@ export class AccountSettingsService {
       await this.validateServerName(updateAccountSettingsDto.serverName);
     }
 
-    const accountSetting = await this.accountSettingsModel.findById(id).exec();
+    const accountSetting = await this.accountSettingsModel.findById(accountSettingsId).exec();
 
     if (!accountSetting) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
+      ThrowExceptionUtils.notFoundException(this.entityType, accountSettingsId);
     }
     //If the user who requested isn't the same as the one returned, throw exception
     if (accountSetting.userId != userId) {
       ThrowExceptionUtils.forbidden();
     }
 
-    return this.accountSettingsModel.findByIdAndUpdate(id, updateAccountSettingsDto, { new: true }).exec();
+    return this.accountSettingsModel
+      .findByIdAndUpdate(accountSettingsId, updateAccountSettingsDto, { new: true })
+      .exec();
   }
 
   //Validate that the requested server exist
@@ -72,5 +74,19 @@ export class AccountSettingsService {
     newAccountSettings.userId = userId;
     newAccountSettings.mountTypes = mountTypes;
     return newAccountSettings.save();
+  }
+
+  //Verify that the given mountType exist in mountTypes
+  verifyMountTypes(mountTypes: string[], mountType: string): void {
+    if (!mountTypes.includes(mountType)) {
+      throw new HttpException(
+        new CustomError(
+          HttpStatus.BAD_REQUEST,
+          'BadParameter',
+          `mountType is invalid, the requested mountType isn't in the accountSettings of the user`,
+        ),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

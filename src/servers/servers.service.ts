@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { ServerDto } from './models/dtos/server.dto';
 import { Server } from './models/schemas/server.schema';
-import { ThrowExceptionUtils } from 'src/utils/throw-exception.utils';
+import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 
 @Injectable()
 export class ServersService {
@@ -18,19 +18,19 @@ export class ServersService {
   }
 
   //Update a existing server
-  async updateServer(id: string, serverDto: ServerDto): Promise<Server> {
-    const server = await this.serverModel.findByIdAndUpdate(id, serverDto, { new: true }).exec();
+  async updateServer(serverId: string, serverDto: ServerDto): Promise<Server> {
+    const server = await this.serverModel.findByIdAndUpdate(serverId, serverDto, { new: true }).exec();
     if (!server) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
+      ThrowExceptionUtils.notFoundException(this.entityType, serverId);
     }
     return server;
   }
 
   //Delete a existing server
-  async deleteServer(id: string): Promise<void> {
-    const server = await this.serverModel.findByIdAndRemove(id).exec();
+  async deleteServer(serverId: string): Promise<void> {
+    const server = await this.serverModel.findByIdAndRemove(serverId).exec();
     if (!server) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
+      ThrowExceptionUtils.notFoundException(this.entityType, serverId);
     }
     return server;
   }
@@ -41,10 +41,10 @@ export class ServersService {
   }
 
   //Get a server by is id
-  async getServerById(id: string): Promise<Server> {
-    const server = await this.serverModel.findById(id).exec();
+  async getServerById(serverId: string): Promise<Server> {
+    const server = await this.serverModel.findById(serverId).exec();
     if (!server) {
-      ThrowExceptionUtils.notFoundException(this.entityType, id);
+      ThrowExceptionUtils.notFoundException(this.entityType, serverId);
     }
     return server;
   }

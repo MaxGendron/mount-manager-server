@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServersModule } from './servers/servers.module';
 import { AccountSettingsModule } from './accounts-settings/accounts-settings.module';
+import { MountsModule } from './mounts/mounts.module';
+import { MountColorsModule } from './mounts/mount-colors/mount-colors.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { AccountSettingsModule } from './accounts-settings/accounts-settings.mod
     UsersModule,
     ServersModule,
     AccountSettingsModule,
+    MountsModule,
+    MountColorsModule,
   ],
 })
 export class AppModule {}

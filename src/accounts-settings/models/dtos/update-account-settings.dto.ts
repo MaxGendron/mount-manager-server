@@ -1,4 +1,4 @@
-import { MountTypeEnum } from '../enum/mount-type.enum';
+import { MountTypeEnum } from '../../../mounts/models/enum/mount-type.enum';
 import { IsOptional, IsEnum } from 'class-validator';
 
 export class UpdateAccountSettingsDto {

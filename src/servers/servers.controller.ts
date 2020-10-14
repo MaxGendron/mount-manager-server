@@ -6,7 +6,7 @@ import {
   CustomApiNotFoundResponse,
   CustomApiForbiddenResponse,
   CustomApiUnauthorizedResponse,
-} from 'src/models/api-response';
+} from 'src/common/models/api-response';
 import {
   ApiTags,
   ApiOperation,
@@ -17,11 +17,11 @@ import {
 } from '@nestjs/swagger';
 import { ServerDto } from './models/dtos/server.dto';
 import { Server } from './models/schemas/server.schema';
-import { MongoIdDto } from 'src/models/dtos/mongo-id.dto';
+import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/users/guards/roles.guard';
 import { UserRoleEnum } from 'src/users/models/enum/user-role.enum';
-import { Roles } from 'src/models/decorator/roles.decorator';
+import { Roles } from 'src/common/models/decorator/roles.decorator';
 
 @ApiTags('Servers')
 @ApiUnexpectedErrorResponse()
@@ -43,7 +43,7 @@ export class ServersController {
     description: 'The server has been created',
     type: Server,
   })
-  @CustomApiBadRequestResponse('Cannot Insert the requested item, duplicate key error on a attribute.')
+  @CustomApiBadRequestResponse()
   @CustomApiForbiddenResponse()
   createServer(@Body() serverDto: ServerDto): Promise<Server> {
     return this.serversService.createServer(serverDto);
@@ -61,7 +61,7 @@ export class ServersController {
     type: Server,
   })
   @CustomApiBadRequestResponse()
-  @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiNotFoundResponse('No server found.')
   @CustomApiForbiddenResponse()
   updateServer(@Param() mongoIdDto: MongoIdDto, @Body() serverDto: ServerDto): Promise<Server> {
     return this.serversService.updateServer(mongoIdDto.id, serverDto);
@@ -79,7 +79,7 @@ export class ServersController {
     description: 'The server has been deleted',
   })
   @CustomApiBadRequestResponse()
-  @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiNotFoundResponse('No server found.')
   @CustomApiForbiddenResponse()
   async deleteServer(@Param() mongoIdDto: MongoIdDto): Promise<void> {
     await this.serversService.deleteServer(mongoIdDto.id);
@@ -95,7 +95,7 @@ export class ServersController {
     type: Server,
   })
   @CustomApiBadRequestResponse()
-  @CustomApiNotFoundResponse('No server setting found.')
+  @CustomApiNotFoundResponse('No server found.')
   getServerById(@Param() mongoIdDto: MongoIdDto): Promise<Server> {
     return this.serversService.getServerById(mongoIdDto.id);
   }
@@ -103,8 +103,9 @@ export class ServersController {
   @Get()
   @ApiOperation({ summary: 'Get servers', description: 'Get all the servers.' })
   @ApiOkResponse({
-    description: 'The servers have been found and returned',
+    description: 'The servers have been returned',
     type: Server,
+    isArray: true,
   })
   getServers(): Promise<Server[]> {
     return this.serversService.getServers();
