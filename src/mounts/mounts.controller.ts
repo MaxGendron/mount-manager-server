@@ -85,22 +85,6 @@ export class MountsController {
     await this.mountsService.deleteMount(mongoIdDto.id, userId);
   }
 
-  @Get(':id')
-  @ApiOperation({
-    summary: 'Get mount by id',
-    description: 'Get the mount by is id.',
-  })
-  @ApiOkResponse({
-    description: 'The mount have been found and returned',
-    type: Mount,
-  })
-  @CustomApiBadRequestResponse()
-  @CustomApiForbiddenResponse()
-  @CustomApiNotFoundResponse('No mount found.')
-  getMountById(@Param() mongoIdDto: MongoIdDto, @User('_id') userId: string): Promise<Mount> {
-    return this.mountsService.getMountById(mongoIdDto.id, userId);
-  }
-
   @Get('find/user-id')
   @ApiOperation({
     summary: 'Get mounts for userId',
