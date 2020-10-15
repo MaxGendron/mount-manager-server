@@ -16,9 +16,9 @@ import { UpdateAccountSettingsDto } from './models/dtos/update-account-settings.
 import { User } from 'src/common/models/decorator/user.decorator';
 
 @ApiTags('Accounts Settings')
-@ApiUnexpectedErrorResponse()
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@ApiUnexpectedErrorResponse()
 @CustomApiUnauthorizedResponse()
 @Controller('accounts-settings')
 export class AccountSettingsController {
