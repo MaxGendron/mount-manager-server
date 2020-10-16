@@ -1,5 +1,6 @@
+import { SearchCouplingDto } from './models/dtos/search-coupling.dto';
 import { CouplingsService } from './couplings.service';
-import { Body, Controller, HttpCode, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, Param, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -65,14 +66,14 @@ export class CouplingsController {
   @Get('find/user-id')
   @ApiOperation({
     summary: 'Get couplings for userId',
-    description: 'Get all the couplings for the userId in the Auth Token',
+    description: 'Get all the couplings for the userId in the Auth Token. Filter if requested.',
   })
   @ApiOkResponse({
     description: 'The couplings have been returned',
     type: Coupling,
     isArray: true,
   })
-  getCouplingsForUserId(@User('_id') userId: string): Promise<Coupling[]> {
-    return this.couplingsService.getCouplingsForUserId(userId);
+  getCouplingsForUserId(@Query() searchCouplingDto: SearchCouplingDto, @User('_id') userId: string): Promise<Coupling[]> {
+    return this.couplingsService.getCouplingsForUserId(searchCouplingDto, userId);
   }
 }

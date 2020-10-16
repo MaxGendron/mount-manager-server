@@ -7,11 +7,11 @@ import { BaseDocument } from 'src/common/models/base-document';
 @Schema()
 export class Coupling extends BaseDocument {
   @ApiProperty()
-  @Prop()
+  @Prop(Mount)
   dad: Mount;
 
   @ApiProperty()
-  @Prop()
+  @Prop(Mount)
   mom: Mount;
 
   @ApiProperty()
