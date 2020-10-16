@@ -73,7 +73,10 @@ export class CouplingsController {
     type: Coupling,
     isArray: true,
   })
-  getCouplingsForUserId(@Query() searchCouplingDto: SearchCouplingDto, @User('_id') userId: string): Promise<Coupling[]> {
+  getCouplingsForUserId(
+    @Query() searchCouplingDto: SearchCouplingDto,
+    @User('_id') userId: string,
+  ): Promise<Coupling[]> {
     return this.couplingsService.getCouplingsForUserId(searchCouplingDto, userId);
   }
 }

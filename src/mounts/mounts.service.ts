@@ -188,10 +188,8 @@ export class MountsService {
       index++;
     }
     if (searchMountDto.name) {
-      query.push({});
-      query[index].name = {};
-      query[index].name.$regex = `^${searchMountDto.name}`;
-      query[index].name.$options = 'i';
+      const q = `{ "name": { "$regex": "^${searchMountDto.name}", "$options": "i"} }`;
+      query.push(JSON.parse(q));
     }
     //Check if array is empty (mongo don't accept empty array)
     return query.length === 0 ? [{}] : query;

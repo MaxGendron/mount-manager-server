@@ -1,7 +1,7 @@
 import { MountsService } from './../mounts.service';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { CreateCouplingDto } from './models/dtos/create-coupling.dto';
 import { Coupling } from './models/schemas/coupling.schema';
@@ -37,16 +37,22 @@ export class CouplingsService {
     const momMount = await this.mountsService.getMountById(createCouplingDto.momId, userId);
 
     if (dadMount.gender !== MountGenderEnum.Male) {
-      throw new HttpException(new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Dad mount have wrong gender.'),
-      HttpStatus.BAD_REQUEST,)
+      throw new HttpException(
+        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Dad mount have wrong gender.'),
+        HttpStatus.BAD_REQUEST,
+      );
     }
     if (momMount.gender !== MountGenderEnum.Female) {
-      throw new HttpException(new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Mom mount have wrong gender.'),
-      HttpStatus.BAD_REQUEST,)
+      throw new HttpException(
+        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Mom mount have wrong gender.'),
+        HttpStatus.BAD_REQUEST,
+      );
     }
     if (dadMount.type !== momMount.type) {
-      throw new HttpException(new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Mounts types aren\'t the same'),
-      HttpStatus.BAD_REQUEST,)
+      throw new HttpException(
+        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', "Mounts types aren't the same"),
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     //Create coupling
@@ -63,7 +69,38 @@ export class CouplingsService {
     await this.couplingModel.findByIdAndRemove(couplingId).exec();
   }
 
-  getCouplingsForUserId(searchCouplingDto: SearchCouplingDto, userId: string): Promise<Coupling[]> {
-    return this.couplingModel.find({ userId: userId }).exec();
+  async getCouplingsForUserId(searchCouplingDto: SearchCouplingDto, userId: string): Promise<Coupling[]> {
+    const query = await this.createSearchQuery(searchCouplingDto);
+
+    return this.couplingModel
+      .aggregate([
+        {
+          $match: {
+            userId: new Types.ObjectId(`${userId}`),
+            $and: query,
+          },
+        },
+      ])
+      .exec();
+  }
+
+  private async createSearchQuery(searchCouplingDto: SearchCouplingDto) {
+    // eslint-disable-next-line prefer-const
+    let query = [];
+
+    if (searchCouplingDto.childName) {
+      const q = `{ "childName": { "$regex": "^${searchCouplingDto.childName}", "$options": "i"} }`;
+      query.push(JSON.parse(q));
+    }
+    if (searchCouplingDto.dadName) {
+      const q = `{ "dad.name": { "$regex": "^${searchCouplingDto.dadName}", "$options": "i"} }`;
+      query.push(JSON.parse(q));
+    }
+    if (searchCouplingDto.momName) {
+      const q = `{ "mom.name": { "$regex": "^${searchCouplingDto.momName}", "$options": "i"} }`;
+      query.push(JSON.parse(q));
+    }
+    //Check if array is empty (mongo don't accept empty array)
+    return query.length === 0 ? [{}] : query;
   }
 }
