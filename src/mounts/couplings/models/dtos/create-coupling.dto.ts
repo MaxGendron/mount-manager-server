@@ -7,9 +7,9 @@ export class CreateCouplingDto {
 
   @IsNotEmpty()
   @IsMongoId()
-  dadId: string;
+  fatherId: string;
 
   @IsNotEmpty()
   @IsMongoId()
-  momId: string;
+  motherId: string;
 }

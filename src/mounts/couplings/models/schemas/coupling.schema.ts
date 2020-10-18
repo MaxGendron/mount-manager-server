@@ -8,11 +8,11 @@ import { BaseDocument } from 'src/common/models/base-document';
 export class Coupling extends BaseDocument {
   @ApiProperty()
   @Prop(Mount)
-  dad: Mount;
+  father: Mount;
 
   @ApiProperty()
   @Prop(Mount)
-  mom: Mount;
+  mother: Mount;
 
   @ApiProperty()
   @Prop()

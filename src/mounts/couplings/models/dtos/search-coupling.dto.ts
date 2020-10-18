@@ -5,12 +5,12 @@ export class SearchCouplingDto {
   @IsOptional()
   @MaxLength(16)
   @ApiProperty({ required: false })
-  dadName: string;
+  fatherName: string;
 
   @IsOptional()
   @MaxLength(16)
   @ApiProperty({ required: false })
-  momName: string;
+  motherName: string;
 
   @IsOptional()
   @MaxLength(16)

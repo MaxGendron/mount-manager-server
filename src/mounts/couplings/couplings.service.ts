@@ -33,22 +33,22 @@ export class CouplingsService {
 
   //CreateCoupling
   async createCoupling(createCouplingDto: CreateCouplingDto, userId: string): Promise<Coupling> {
-    const dadMount = await this.mountsService.getMountById(createCouplingDto.dadId, userId);
-    const momMount = await this.mountsService.getMountById(createCouplingDto.momId, userId);
+    const fatherMount = await this.mountsService.getMountById(createCouplingDto.fatherId, userId);
+    const motherMount = await this.mountsService.getMountById(createCouplingDto.motherId, userId);
 
-    if (dadMount.gender !== MountGenderEnum.Male) {
+    if (fatherMount.gender !== MountGenderEnum.Male) {
       throw new HttpException(
-        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Dad mount have wrong gender.'),
+        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Father mount have wrong gender.'),
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (momMount.gender !== MountGenderEnum.Female) {
+    if (motherMount.gender !== MountGenderEnum.Female) {
       throw new HttpException(
-        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Mom mount have wrong gender.'),
+        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Mother mount have wrong gender.'),
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (dadMount.type !== momMount.type) {
+    if (fatherMount.type !== motherMount.type) {
       throw new HttpException(
         new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', "Mounts types aren't the same"),
         HttpStatus.BAD_REQUEST,
@@ -57,8 +57,8 @@ export class CouplingsService {
 
     //Create coupling
     const newCoupling = new this.couplingModel(createCouplingDto);
-    newCoupling.dad = dadMount;
-    newCoupling.mom = momMount;
+    newCoupling.father = fatherMount;
+    newCoupling.mother = motherMount;
     newCoupling.userId = userId;
     return newCoupling.save();
   }
@@ -92,12 +92,12 @@ export class CouplingsService {
       const q = `{ "childName": { "$regex": "^${searchCouplingDto.childName}", "$options": "i"} }`;
       query.push(JSON.parse(q));
     }
-    if (searchCouplingDto.dadName) {
-      const q = `{ "dad.name": { "$regex": "^${searchCouplingDto.dadName}", "$options": "i"} }`;
+    if (searchCouplingDto.fatherName) {
+      const q = `{ "father.name": { "$regex": "^${searchCouplingDto.fatherName}", "$options": "i"} }`;
       query.push(JSON.parse(q));
     }
-    if (searchCouplingDto.momName) {
-      const q = `{ "mom.name": { "$regex": "^${searchCouplingDto.momName}", "$options": "i"} }`;
+    if (searchCouplingDto.motherName) {
+      const q = `{ "mother.name": { "$regex": "^${searchCouplingDto.motherName}", "$options": "i"} }`;
       query.push(JSON.parse(q));
     }
     //Check if array is empty (mongo don't accept empty array)
