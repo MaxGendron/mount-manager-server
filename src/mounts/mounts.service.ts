@@ -178,7 +178,7 @@ export class MountsService {
 
   //Update the mount numberOfChild if it's smaller than the maxNumberOfChild
   async updateNumberOfChild(mount: Mount): Promise<void> {
-    mount.numberOfChild = mount.numberOfChild++;
+    mount.numberOfChild = ++mount.numberOfChild;
     if (mount.numberOfChild > mount.maxNumberOfChild) {
       ThrowExceptionUtils.cannotInsert(`Exceeding maxNumberOfChild for mountId: ${mount._id}.`);
     }
