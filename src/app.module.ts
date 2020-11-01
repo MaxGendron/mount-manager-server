@@ -6,6 +6,7 @@ import { ServersModule } from './servers/servers.module';
 import { AccountSettingsModule } from './accounts-settings/accounts-settings.module';
 import { MountsModule } from './mounts/mounts.module';
 import { MountColorsModule } from './mounts/mount-colors/mount-colors.module';
+import { CouplingsModule } from './mounts/couplings/couplings.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MountColorsModule } from './mounts/mount-colors/mount-colors.module';
     AccountSettingsModule,
     MountsModule,
     MountColorsModule,
+    CouplingsModule,
   ],
 })
 export class AppModule {}

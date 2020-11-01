@@ -14,5 +14,6 @@ import { MountsService } from './mounts.service';
   ],
   controllers: [MountsController],
   providers: [MountsService],
+  exports: [MountsService],
 })
 export class MountsModule {}
