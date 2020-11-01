@@ -31,6 +31,14 @@ export class Mount extends BaseDocument {
   @ApiProperty()
   @Prop()
   type: MountTypeEnum;
+
+  @ApiProperty()
+  @Prop()
+  maxNumberOfChild: number;
+
+  @ApiProperty()
+  @Prop()
+  numberOfChild: number;
 }
 
 export const MountSchema = SchemaFactory.createForClass(Mount);

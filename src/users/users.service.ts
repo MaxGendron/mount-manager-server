@@ -1,10 +1,9 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './models/schemas/user.schema';
 import { RegisterDto } from './models/dtos/register.dto';
-import { CustomError } from 'src/common/models/custom-error';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { LoggedUserResponseDto } from './models/dtos/responses/logged-user.response.dto';
@@ -37,14 +36,7 @@ export class UsersService {
       .exec();
 
     if (count > 0) {
-      throw new HttpException(
-        new CustomError(
-          HttpStatus.BAD_REQUEST,
-          'CannotInsert',
-          'Cannot Insert the requested user, verify your information',
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      ThrowExceptionUtils.cannotInsert('Cannot Insert the requested user, verify your information');
     }
 
     //Hash the password
@@ -137,14 +129,7 @@ export class UsersService {
       const count = await this.userModel.countDocuments(countQuery).exec();
 
       if (count > 0) {
-        throw new HttpException(
-          new CustomError(
-            HttpStatus.BAD_REQUEST,
-            'CannotInsert',
-            'Cannot Insert the requested user, verify your information',
-          ),
-          HttpStatus.BAD_REQUEST,
-        );
+        ThrowExceptionUtils.cannotInsert('Cannot Insert the requested user, verify your information');
       }
     }
 
