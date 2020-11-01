@@ -62,7 +62,11 @@ export class MountsService {
 
     mount.name = updateMountDto.name ?? mount.name;
     mount.gender = updateMountDto.gender ?? mount.gender;
-    mount.maxNumberOfChild = updateMountDto.maxNumberOfChild ?? mount.maxNumberOfChild;
+    if (updateMountDto.maxNumberOfChild) {
+      //Check if maxNumberOfChild is valid
+      this.validateMaxNumberOfChild(updateMountDto.maxNumberOfChild, mount.type);
+      mount.maxNumberOfChild = updateMountDto.maxNumberOfChild;
+    }
 
     return this.mountModel.findByIdAndUpdate(mountId, mount, { new: true }).exec();
   }
