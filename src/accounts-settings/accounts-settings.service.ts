@@ -1,11 +1,10 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AccountSettings } from './models/schemas/account-settings.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UpdateAccountSettingsDto } from './models/dtos/update-account-settings.dto';
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { ServersService } from 'src/servers/servers.service';
-import { CustomError } from 'src/common/models/custom-error';
 import { MountTypeEnum } from '../mounts/models/enum/mount-type.enum';
 
 @Injectable()
@@ -48,14 +47,7 @@ export class AccountSettingsService {
   async validateServerName(serverName: string): Promise<void> {
     const server = await this.serversService.getServerByName(serverName);
     if (!server) {
-      throw new HttpException(
-        new CustomError(
-          HttpStatus.BAD_REQUEST,
-          'BadParameter',
-          `serverName is invalid, the requested server doesn't exist`,
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      ThrowExceptionUtils.badParameter(`serverName is invalid, the requested server doesn't exist`);
     }
   }
 
@@ -79,13 +71,8 @@ export class AccountSettingsService {
   //Verify that the given mountType exist in mountTypes
   verifyMountTypes(mountTypes: string[], mountType: string): void {
     if (!mountTypes.includes(mountType)) {
-      throw new HttpException(
-        new CustomError(
-          HttpStatus.BAD_REQUEST,
-          'BadParameter',
-          `mountType is invalid, the requested mountType isn't in the accountSettings of the user`,
-        ),
-        HttpStatus.BAD_REQUEST,
+      ThrowExceptionUtils.badParameter(
+        `mountType is invalid, the requested mountType isn't in the accountSettings of the user`,
       );
     }
   }

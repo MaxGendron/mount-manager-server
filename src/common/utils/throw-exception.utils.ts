@@ -16,4 +16,16 @@ export class ThrowExceptionUtils {
       HttpStatus.FORBIDDEN,
     );
   }
+
+  static badParameter(message: string): void {
+    this.badRequest('BadParameter', message);
+  }
+
+  static cannotInsert(message: string): void {
+    this.badRequest('CannotInsert', message);
+  }
+
+  static badRequest(name: string, message: string): void {
+    throw new HttpException(new CustomError(HttpStatus.BAD_REQUEST, name, message), HttpStatus.BAD_REQUEST);
+  }
 }

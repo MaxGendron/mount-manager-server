@@ -13,4 +13,7 @@ export class CreateMountDto {
   @IsNotEmpty()
   @IsEnum(MountGenderEnum, { each: true })
   gender: MountGenderEnum;
+
+  @IsNotEmpty()
+  maxNumberOfChild: number;
 }

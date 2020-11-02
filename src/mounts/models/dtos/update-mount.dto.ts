@@ -1,4 +1,4 @@
-import { IsEnum, IsMongoId, IsOptional, MaxLength } from 'class-validator';
+import { IsEnum, IsMongoId, IsNotEmpty, IsOptional, MaxLength } from 'class-validator';
 import { MountGenderEnum } from '../enum/mount-gender.enum';
 
 export class UpdateMountDto {
@@ -13,4 +13,8 @@ export class UpdateMountDto {
   @IsOptional()
   @IsEnum(MountGenderEnum, { each: true })
   gender: MountGenderEnum;
+
+  @IsOptional()
+  @IsNotEmpty()
+  maxNumberOfChild: number;
 }

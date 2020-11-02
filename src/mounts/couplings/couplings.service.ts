@@ -1,12 +1,11 @@
 import { MountsService } from './../mounts.service';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { CreateCouplingDto } from './models/dtos/create-coupling.dto';
 import { Coupling } from './models/schemas/coupling.schema';
 import { SearchCouplingDto } from './models/dtos/search-coupling.dto';
-import { CustomError } from 'src/common/models/custom-error';
 import { MountGenderEnum } from '../models/enum/mount-gender.enum';
 
 @Injectable()
@@ -37,23 +36,18 @@ export class CouplingsService {
     const motherMount = await this.mountsService.getMountById(createCouplingDto.motherId, userId);
 
     if (fatherMount.gender !== MountGenderEnum.Male) {
-      throw new HttpException(
-        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Father mount have wrong gender.'),
-        HttpStatus.BAD_REQUEST,
-      );
+      ThrowExceptionUtils.badParameter('Father mount have wrong gender.');
     }
     if (motherMount.gender !== MountGenderEnum.Female) {
-      throw new HttpException(
-        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', 'Mother mount have wrong gender.'),
-        HttpStatus.BAD_REQUEST,
-      );
+      ThrowExceptionUtils.badParameter('Mother mount have wrong gender.');
     }
     if (fatherMount.type !== motherMount.type) {
-      throw new HttpException(
-        new CustomError(HttpStatus.BAD_REQUEST, 'BadParameter', "Mounts types aren't the same"),
-        HttpStatus.BAD_REQUEST,
-      );
+      ThrowExceptionUtils.badParameter(`Mounts types aren't the same.`);
     }
+
+    //Update number of child
+    await this.mountsService.updateNumberOfChild(fatherMount);
+    await this.mountsService.updateNumberOfChild(motherMount);
 
     //Create coupling
     const newCoupling = new this.couplingModel(createCouplingDto);

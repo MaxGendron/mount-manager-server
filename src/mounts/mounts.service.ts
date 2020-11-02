@@ -11,6 +11,7 @@ import { UpdateMountDto } from './models/dtos/update-mount.dto';
 import { Mount } from './models/schemas/mount.schema';
 import { MountColorsService } from './mount-colors/mount-colors.service';
 import { SortOrderEnum } from 'src/common/models/enum/sort-order.enum';
+import { MountTypeEnum } from './models/enum/mount-type.enum';
 
 @Injectable()
 export class MountsService {
@@ -30,11 +31,16 @@ export class MountsService {
     const accountSettings = await this.accountSettingsService.getAccountSettingsByUserId(userId);
     this.accountSettingsService.verifyMountTypes(accountSettings.mountTypes, mountColor.mountType);
 
+    //Check if maxNumberOfChild is valid
+    this.validateMaxNumberOfChild(createMountDto.maxNumberOfChild, mountColor.mountType);
+
     //Create mount
     const newMount = new this.mountModel(createMountDto);
     newMount.color = mountColor.color;
     newMount.type = mountColor.mountType;
     newMount.userId = userId;
+    //0 child by default
+    newMount.numberOfChild = 0;
     return newMount.save();
   }
 
@@ -56,6 +62,11 @@ export class MountsService {
 
     mount.name = updateMountDto.name ?? mount.name;
     mount.gender = updateMountDto.gender ?? mount.gender;
+    if (updateMountDto.maxNumberOfChild) {
+      //Check if maxNumberOfChild is valid
+      this.validateMaxNumberOfChild(updateMountDto.maxNumberOfChild, mount.type);
+      mount.maxNumberOfChild = updateMountDto.maxNumberOfChild;
+    }
 
     return this.mountModel.findByIdAndUpdate(mountId, mount, { new: true }).exec();
   }
@@ -165,6 +176,15 @@ export class MountsService {
       .exec();
   }
 
+  //Update the mount numberOfChild if it's smaller than the maxNumberOfChild
+  async updateNumberOfChild(mount: Mount): Promise<void> {
+    mount.numberOfChild = ++mount.numberOfChild;
+    if (mount.numberOfChild > mount.maxNumberOfChild) {
+      ThrowExceptionUtils.cannotInsert(`Exceeding maxNumberOfChild for mountId: ${mount._id}.`);
+    }
+    this.mountModel.findByIdAndUpdate(mount._id, mount, { new: true }).exec();
+  }
+
   private async createSearchQuery(searchMountDto: SearchMountDto) {
     // eslint-disable-next-line prefer-const
     let query = [];
@@ -193,5 +213,23 @@ export class MountsService {
     }
     //Check if array is empty (mongo don't accept empty array)
     return query.length === 0 ? [{}] : query;
+  }
+
+  private validateMaxNumberOfChild(maxNumberOfChild: number, mountType: MountTypeEnum): void {
+    let isValid = true;
+    switch (mountType) {
+      case MountTypeEnum.Dragodinde:
+        isValid = maxNumberOfChild == 5;
+        break;
+      case MountTypeEnum.Muldo:
+        isValid = maxNumberOfChild <= 4 && maxNumberOfChild >= 2;
+        break;
+      case MountTypeEnum.Volkorne:
+        isValid = maxNumberOfChild == 2;
+        break;
+    }
+    if (!isValid) {
+      ThrowExceptionUtils.badParameter('maxNumberOfChild value is invalid.');
+    }
   }
 }
