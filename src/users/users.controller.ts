@@ -114,4 +114,20 @@ export class UsersController {
   ): Promise<UserResponseDto> {
     return this.usersService.updateUser(mongoIdDto.id, updateUserDto, userId);
   }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('/validateJwtToken')
+  @ApiOperation({
+    summary: 'Validate the JWT Token',
+    description: 'Validate that the JWT Token is not expired.',
+  })
+  @ApiOkResponse({
+    description: 'The token is valid',
+    type: UserResponseDto,
+  })
+  @CustomApiUnauthorizedResponse()
+  healthcheck() {
+    return "Not expired";
+  }
 }
