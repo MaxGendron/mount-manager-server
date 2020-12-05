@@ -128,6 +128,6 @@ export class UsersController {
   })
   @CustomApiUnauthorizedResponse()
   healthcheck() {
-    return "Not expired";
+    return 'Not expired';
   }
 }

@@ -1,3 +1,4 @@
+import { CreateMountsDto } from './models/dtos/create-mounts.dto';
 import { MountSortFieldEnum } from './models/enum/mount-sort-field.enum';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -25,23 +26,18 @@ export class MountsService {
 
   //Create mount
   async createMount(createMountDto: CreateMountDto, userId: string): Promise<Mount> {
-    const mountColor = await this.mountColorsService.getMountColorById(createMountDto.colorId);
-
-    //Check if mountType is in list of user mountTypes (in account-settings)
-    const accountSettings = await this.accountSettingsService.getAccountSettingsByUserId(userId);
-    this.accountSettingsService.verifyMountTypes(accountSettings.mountTypes, mountColor.mountType);
-
-    //Check if maxNumberOfChild is valid
-    this.validateMaxNumberOfChild(createMountDto.maxNumberOfChild, mountColor.mountType);
-
-    //Create mount
-    const newMount = new this.mountModel(createMountDto);
-    newMount.color = mountColor.color;
-    newMount.type = mountColor.mountType;
-    newMount.userId = userId;
-    //0 child by default
-    newMount.numberOfChild = 0;
+    const newMount = await this.createMountModel(createMountDto, userId);
     return newMount.save();
+  }
+
+  //Create multiple mounts in one call
+  async createMounts(createMountsDto: CreateMountsDto, userId: string): Promise<Mount[]> {
+    const docs = [];
+    for (const createMountDto of createMountsDto.createMountDtos) {
+      const newMount = await this.createMountModel(createMountDto, userId);
+      docs.push(newMount);
+    }
+    return this.mountModel.insertMany(docs);
   }
 
   //Update mount
@@ -183,6 +179,28 @@ export class MountsService {
       ThrowExceptionUtils.cannotInsert(`Exceeding maxNumberOfChild for mountId: ${mount._id}.`);
     }
     this.mountModel.findByIdAndUpdate(mount._id, mount, { new: true }).exec();
+  }
+
+  //Create the MountModel for a new mount, used by both createMount & createMounts
+  private async createMountModel(createMountDto: CreateMountDto, userId: string): Promise<any> {
+    const mountColor = await this.mountColorsService.getMountColorById(createMountDto.colorId);
+
+    //Check if mountType is in list of user mountTypes (in account-settings)
+    const accountSettings = await this.accountSettingsService.getAccountSettingsByUserId(userId);
+    this.accountSettingsService.verifyMountTypes(accountSettings.mountTypes, mountColor.mountType);
+
+    //Check if maxNumberOfChild is valid
+    this.validateMaxNumberOfChild(createMountDto.maxNumberOfChild, mountColor.mountType);
+
+    //Create mount
+    const newMount = new this.mountModel(createMountDto);
+    newMount.color = mountColor.color;
+    newMount.type = mountColor.mountType;
+    newMount.userId = userId;
+    //0 child by default
+    newMount.numberOfChild = 0;
+
+    return newMount;
   }
 
   private async createSearchQuery(searchMountDto: SearchMountDto) {
