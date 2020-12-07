@@ -210,7 +210,7 @@ export class MountsService {
     //Set filters
     if (searchMountDto.colorId) {
       const mountColor = await this.mountColorsService.getMountColorById(searchMountDto.colorId);
-      const q = { "colorId": mountColor._id };
+      const q = { colorId: mountColor._id };
       query.push(q);
     }
     if (searchMountDto.gender) {
