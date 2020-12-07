@@ -206,27 +206,31 @@ export class MountsService {
   private async createSearchQuery(searchMountDto: SearchMountDto) {
     // eslint-disable-next-line prefer-const
     let query = [];
-    let index = 0;
 
     //Set filters
     if (searchMountDto.colorId) {
       const mountColor = await this.mountColorsService.getMountColorById(searchMountDto.colorId);
-      query.push({});
-      query[index].colorId = mountColor._id;
-      index++;
+      const q = { colorId: mountColor._id };
+      query.push(q);
     }
     if (searchMountDto.gender) {
-      query.push({});
-      query[index].gender = searchMountDto.gender;
-      index++;
+      const q = `{ "gender": "${searchMountDto.gender}" }`;
+      query.push(JSON.parse(q));
     }
     if (searchMountDto.type) {
-      query.push({});
-      query[index].type = searchMountDto.type;
-      index++;
+      const q = `{ "type": "${searchMountDto.type}" }`;
+      query.push(JSON.parse(q));
     }
     if (searchMountDto.name) {
       const q = `{ "name": { "$regex": "^${searchMountDto.name}", "$options": "i"} }`;
+      query.push(JSON.parse(q));
+    }
+    if (searchMountDto.hasMaxedChild) {
+      const q = `{ "$expr": { "$eq": ["$maxNumberOfChild", "$numberOfChild"] } }`;
+      query.push(JSON.parse(q));
+    }
+    if (searchMountDto.hasNoChild) {
+      const q = `{ "numberOfChild": { "$eq": 0 } }`;
       query.push(JSON.parse(q));
     }
     //Check if array is empty (mongo don't accept empty array)
