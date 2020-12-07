@@ -19,6 +19,7 @@ import { User } from 'src/common/models/decorator/user.decorator';
 import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { CreateMountDto } from './models/dtos/create-mount.dto';
+import { CreateMountsDto } from './models/dtos/create-mounts.dto';
 import { MountGenderCountResponseDto } from './models/dtos/responses/mount-gender-count.response.dto';
 import { SearchMountDto } from './models/dtos/search-mount.dto';
 import { UpdateMountDto } from './models/dtos/update-mount.dto';
@@ -111,5 +112,21 @@ export class MountsController {
   })
   genderCountByTypeForUserId(@User('_id') userId: string): Promise<MountGenderCountResponseDto[]> {
     return this.mountsService.genderCountByTypeForUserId(userId);
+  }
+
+  @Post('/bulk-add')
+  @ApiOperation({
+    summary: 'Create mounts',
+    description: 'Create new mounts.',
+  })
+  @ApiCreatedResponse({
+    description: 'The mounts have been created',
+    type: Mount,
+    isArray: true,
+  })
+  @CustomApiBadRequestResponse()
+  @CustomApiNotFoundResponse('No mount color found for the colorId.')
+  createMounts(@Body() createMountsDto: CreateMountsDto, @User('_id') userId: string): Promise<Mount[]> {
+    return this.mountsService.createMounts(createMountsDto, userId);
   }
 }
