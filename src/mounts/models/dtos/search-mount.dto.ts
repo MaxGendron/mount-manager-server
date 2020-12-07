@@ -34,4 +34,12 @@ export class SearchMountDto {
   @IsMongoId()
   @ApiProperty({ required: false })
   colorId: string;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  hasMaxedChild: boolean;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  hasNoChild: boolean;
 }
