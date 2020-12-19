@@ -247,7 +247,7 @@ export class MountsService {
         isValid = maxNumberOfChild <= 4 && maxNumberOfChild >= 2;
         break;
       case MountTypeEnum.Volkorne:
-        isValid = maxNumberOfChild == 2;
+        isValid = maxNumberOfChild == 1 || maxNumberOfChild == 2;
         break;
     }
     if (!isValid) {
