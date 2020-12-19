@@ -17,6 +17,7 @@ import { MountTypeEnum } from './models/enum/mount-type.enum';
 @Injectable()
 export class MountsService {
   private readonly entityType = 'Mount';
+  private readonly queryLimit = 10;
 
   constructor(
     @InjectModel(Mount.name) private mountModel: Model<Mount>,
@@ -96,6 +97,7 @@ export class MountsService {
     //Set sort
     const sortField = searchMountDto.sortField ?? MountSortFieldEnum.Name;
     const sortOrder = +(searchMountDto.sortOrder ?? SortOrderEnum.Asc);
+    const limit = searchMountDto.limit ?? this.queryLimit;
 
     return this.mountModel
       .aggregate([
@@ -109,6 +111,9 @@ export class MountsService {
           $sort: {
             [sortField]: sortOrder,
           },
+        },
+        {
+          $limit: + limit
         },
       ])
       .exec();

@@ -16,4 +16,8 @@ export class SearchCouplingDto {
   @MaxLength(16)
   @ApiProperty({ required: false })
   childName: string;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  limit: number;
 }

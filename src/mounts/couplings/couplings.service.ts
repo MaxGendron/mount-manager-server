@@ -11,6 +11,7 @@ import { MountGenderEnum } from '../models/enum/mount-gender.enum';
 @Injectable()
 export class CouplingsService {
   private readonly entityType = 'Coupling';
+  private readonly queryLimit = 10;
 
   constructor(
     @InjectModel(Coupling.name) private couplingModel: Model<Coupling>,
@@ -65,6 +66,7 @@ export class CouplingsService {
 
   async getCouplingsForUserId(searchCouplingDto: SearchCouplingDto, userId: string): Promise<Coupling[]> {
     const query = await this.createSearchQuery(searchCouplingDto);
+    const limit = searchCouplingDto.limit ?? this.queryLimit;
 
     return this.couplingModel
       .aggregate([
@@ -73,6 +75,9 @@ export class CouplingsService {
             userId: new Types.ObjectId(`${userId}`),
             $and: query,
           },
+        },
+        {
+          $limit: +limit
         },
       ])
       .exec();
