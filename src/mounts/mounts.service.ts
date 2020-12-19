@@ -17,7 +17,7 @@ import { MountTypeEnum } from './models/enum/mount-type.enum';
 @Injectable()
 export class MountsService {
   private readonly entityType = 'Mount';
-  private readonly queryLimit = 10;
+  private readonly queryLimit = 20;
 
   constructor(
     @InjectModel(Mount.name) private mountModel: Model<Mount>,
@@ -113,7 +113,7 @@ export class MountsService {
           },
         },
         {
-          $limit: + limit
+          $limit: +limit,
         },
       ])
       .exec();

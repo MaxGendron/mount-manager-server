@@ -11,7 +11,7 @@ import { MountGenderEnum } from '../models/enum/mount-gender.enum';
 @Injectable()
 export class CouplingsService {
   private readonly entityType = 'Coupling';
-  private readonly queryLimit = 10;
+  private readonly queryLimit = 20;
 
   constructor(
     @InjectModel(Coupling.name) private couplingModel: Model<Coupling>,
@@ -77,7 +77,7 @@ export class CouplingsService {
           },
         },
         {
-          $limit: +limit
+          $limit: +limit,
         },
       ])
       .exec();
