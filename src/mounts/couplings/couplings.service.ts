@@ -7,7 +7,7 @@ import { CreateCouplingDto } from './models/dtos/create-coupling.dto';
 import { Coupling } from './models/schemas/coupling.schema';
 import { SearchCouplingDto } from './models/dtos/search-coupling.dto';
 import { MountGenderEnum } from '../models/enum/mount-gender.enum';
-import { GetCouplingsReponseDto } from './models/dtos/responses/get-couplings.response.dto';
+import { GetCouplingsResponseDto } from './models/dtos/responses/get-couplings.response.dto';
 
 @Injectable()
 export class CouplingsService {
@@ -65,12 +65,12 @@ export class CouplingsService {
     await this.couplingModel.findByIdAndRemove(couplingId).exec();
   }
 
-  async getCouplingsForUserId(searchCouplingDto: SearchCouplingDto, userId: string): Promise<GetCouplingsReponseDto> {
+  async getCouplingsForUserId(searchCouplingDto: SearchCouplingDto, userId: string): Promise<GetCouplingsResponseDto> {
     const query = await this.createSearchQuery(searchCouplingDto);
     const limit = searchCouplingDto.limit ?? this.queryLimit;
 
     //Get the couplings item
-    return await this.couplingModel
+    const couplings = await this.couplingModel
       .aggregate([
         {
           $match: {
@@ -105,6 +105,14 @@ export class CouplingsService {
         }
       ])
       .exec();
+
+      if (couplings && couplings.length > 0) {
+        return couplings[0];
+      }
+      const response = new GetCouplingsResponseDto();
+      response.totalCount = 0;
+      response.couplings = [];
+      return response
   }
 
   private async createSearchQuery(searchCouplingDto: SearchCouplingDto): Promise<any> {

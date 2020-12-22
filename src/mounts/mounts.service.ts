@@ -100,7 +100,7 @@ export class MountsService {
     const sortOrder = +(searchMountDto.sortOrder ?? SortOrderEnum.Asc);
     const limit = searchMountDto.limit ?? this.queryLimit;
 
-    return this.mountModel
+    const mounts = await this.mountModel
       .aggregate([
         {
           $match: {
@@ -140,6 +140,14 @@ export class MountsService {
         }
       ])
       .exec();
+
+      if (mounts && mounts.length > 0) {
+        return mounts[0];
+      }
+      const response = new GetMountsResponseDto();
+      response.totalCount = 0;
+      response.mounts = [];
+      return response
   }
 
   /*
