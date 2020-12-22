@@ -13,6 +13,7 @@ import { Mount } from './models/schemas/mount.schema';
 import { MountColorsService } from './mount-colors/mount-colors.service';
 import { SortOrderEnum } from 'src/common/models/enum/sort-order.enum';
 import { MountTypeEnum } from './models/enum/mount-type.enum';
+import { GetMountsResponseDto } from './models/dtos/responses/get-mounts-response.dto';
 
 @Injectable()
 export class MountsService {
@@ -91,7 +92,7 @@ export class MountsService {
   Get the list of mounts associated to a userId
   Filter/sort if needed. Default sorting is name ASC
   */
-  async getMountsForUserId(searchMountDto: SearchMountDto, userId: string): Promise<Mount[]> {
+  async getMountsForUserId(searchMountDto: SearchMountDto, userId: string): Promise<GetMountsResponseDto> {
     const query = await this.createSearchQuery(searchMountDto);
 
     //Set sort
@@ -113,8 +114,30 @@ export class MountsService {
           },
         },
         {
-          $limit: +limit,
+          $facet: {
+            count: [
+              {
+                $count: 'value'
+              }
+            ],
+            mounts: [
+              {
+                $limit: +limit
+              }
+            ]
+          }
         },
+        {
+          $unwind: {
+            path: '$count',
+            preserveNullAndEmptyArrays: false
+          }
+        },
+        {
+          $addFields: {
+            count: "$count.value"
+          }
+        }
       ])
       .exec();
   }

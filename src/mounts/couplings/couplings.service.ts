@@ -7,6 +7,7 @@ import { CreateCouplingDto } from './models/dtos/create-coupling.dto';
 import { Coupling } from './models/schemas/coupling.schema';
 import { SearchCouplingDto } from './models/dtos/search-coupling.dto';
 import { MountGenderEnum } from '../models/enum/mount-gender.enum';
+import { GetCouplingsReponseDto } from './models/dtos/responses/get-couplings.response.dto';
 
 @Injectable()
 export class CouplingsService {
@@ -64,11 +65,12 @@ export class CouplingsService {
     await this.couplingModel.findByIdAndRemove(couplingId).exec();
   }
 
-  async getCouplingsForUserId(searchCouplingDto: SearchCouplingDto, userId: string): Promise<Coupling[]> {
+  async getCouplingsForUserId(searchCouplingDto: SearchCouplingDto, userId: string): Promise<GetCouplingsReponseDto> {
     const query = await this.createSearchQuery(searchCouplingDto);
     const limit = searchCouplingDto.limit ?? this.queryLimit;
 
-    return this.couplingModel
+    //Get the couplings item
+    return await this.couplingModel
       .aggregate([
         {
           $match: {
@@ -77,13 +79,35 @@ export class CouplingsService {
           },
         },
         {
-          $limit: +limit,
+          $facet: {
+            count: [
+              {
+                $count: 'value'
+              }
+            ],
+            mounts: [
+              {
+                $limit: +limit
+              }
+            ]
+          }
         },
+        {
+          $unwind: {
+            path: '$count',
+            preserveNullAndEmptyArrays: false
+          }
+        },
+        {
+          $addFields: {
+            count: "$count.value"
+          }
+        }
       ])
       .exec();
   }
 
-  private async createSearchQuery(searchCouplingDto: SearchCouplingDto) {
+  private async createSearchQuery(searchCouplingDto: SearchCouplingDto): Promise<any> {
     // eslint-disable-next-line prefer-const
     let query = [];
 

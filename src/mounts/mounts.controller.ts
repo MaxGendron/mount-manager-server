@@ -20,6 +20,7 @@ import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
 import { JwtAuthGuard } from 'src/users/guards/jwt-auth.guard';
 import { CreateMountDto } from './models/dtos/create-mount.dto';
 import { CreateMountsDto } from './models/dtos/create-mounts.dto';
+import { GetMountsResponseDto } from './models/dtos/responses/get-mounts-response.dto';
 import { MountGenderCountResponseDto } from './models/dtos/responses/mount-gender-count.response.dto';
 import { SearchMountDto } from './models/dtos/search-mount.dto';
 import { UpdateMountDto } from './models/dtos/update-mount.dto';
@@ -96,7 +97,7 @@ export class MountsController {
     type: Mount,
     isArray: true,
   })
-  getMountsForUserId(@Query() searchMountDto: SearchMountDto, @User('_id') userId: string): Promise<Mount[]> {
+  getMountsForUserId(@Query() searchMountDto: SearchMountDto, @User('_id') userId: string): Promise<GetMountsResponseDto> {
     return this.mountsService.getMountsForUserId(searchMountDto, userId);
   }
 
