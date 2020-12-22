@@ -115,7 +115,7 @@ export class MountsService {
         },
         {
           $facet: {
-            count: [
+            totalCount: [
               {
                 $count: 'value'
               }
@@ -129,13 +129,13 @@ export class MountsService {
         },
         {
           $unwind: {
-            path: '$count',
+            path: '$totalCount',
             preserveNullAndEmptyArrays: false
           }
         },
         {
           $addFields: {
-            count: "$count.value"
+            totalCount: "$totalCount.value"
           }
         }
       ])

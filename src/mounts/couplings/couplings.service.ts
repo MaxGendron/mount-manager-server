@@ -80,7 +80,7 @@ export class CouplingsService {
         },
         {
           $facet: {
-            count: [
+            totalCount: [
               {
                 $count: 'value'
               }
@@ -94,13 +94,13 @@ export class CouplingsService {
         },
         {
           $unwind: {
-            path: '$count',
+            path: '$totalCount',
             preserveNullAndEmptyArrays: false
           }
         },
         {
           $addFields: {
-            count: "$count.value"
+            totalCount: "$totalCount.value"
           }
         }
       ])
