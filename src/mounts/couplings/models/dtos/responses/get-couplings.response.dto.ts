@@ -1,4 +1,4 @@
-import { Coupling } from "../../schemas/coupling.schema";
+import { Coupling } from '../../schemas/coupling.schema';
 
 export class GetCouplingsResponseDto {
   totalCount: number;

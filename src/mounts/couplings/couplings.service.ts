@@ -82,37 +82,37 @@ export class CouplingsService {
           $facet: {
             totalCount: [
               {
-                $count: 'value'
-              }
+                $count: 'value',
+              },
             ],
             couplings: [
               {
-                $limit: +limit
-              }
-            ]
-          }
+                $limit: +limit,
+              },
+            ],
+          },
         },
         {
           $unwind: {
             path: '$totalCount',
-            preserveNullAndEmptyArrays: false
-          }
+            preserveNullAndEmptyArrays: false,
+          },
         },
         {
           $addFields: {
-            totalCount: "$totalCount.value"
-          }
-        }
+            totalCount: '$totalCount.value',
+          },
+        },
       ])
       .exec();
 
-      if (couplings && couplings.length > 0) {
-        return couplings[0];
-      }
-      const response = new GetCouplingsResponseDto();
-      response.totalCount = 0;
-      response.couplings = [];
-      return response
+    if (couplings && couplings.length > 0) {
+      return couplings[0];
+    }
+    const response = new GetCouplingsResponseDto();
+    response.totalCount = 0;
+    response.couplings = [];
+    return response;
   }
 
   private async createSearchQuery(searchCouplingDto: SearchCouplingDto): Promise<any> {

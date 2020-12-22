@@ -117,37 +117,37 @@ export class MountsService {
           $facet: {
             totalCount: [
               {
-                $count: 'value'
-              }
+                $count: 'value',
+              },
             ],
             mounts: [
               {
-                $limit: +limit
-              }
-            ]
-          }
+                $limit: +limit,
+              },
+            ],
+          },
         },
         {
           $unwind: {
             path: '$totalCount',
-            preserveNullAndEmptyArrays: false
-          }
+            preserveNullAndEmptyArrays: false,
+          },
         },
         {
           $addFields: {
-            totalCount: "$totalCount.value"
-          }
-        }
+            totalCount: '$totalCount.value',
+          },
+        },
       ])
       .exec();
 
-      if (mounts && mounts.length > 0) {
-        return mounts[0];
-      }
-      const response = new GetMountsResponseDto();
-      response.totalCount = 0;
-      response.mounts = [];
-      return response
+    if (mounts && mounts.length > 0) {
+      return mounts[0];
+    }
+    const response = new GetMountsResponseDto();
+    response.totalCount = 0;
+    response.mounts = [];
+    return response;
   }
 
   /*

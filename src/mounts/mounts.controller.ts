@@ -97,7 +97,10 @@ export class MountsController {
     type: Mount,
     isArray: true,
   })
-  getMountsForUserId(@Query() searchMountDto: SearchMountDto, @User('_id') userId: string): Promise<GetMountsResponseDto> {
+  getMountsForUserId(
+    @Query() searchMountDto: SearchMountDto,
+    @User('_id') userId: string,
+  ): Promise<GetMountsResponseDto> {
     return this.mountsService.getMountsForUserId(searchMountDto, userId);
   }
 
