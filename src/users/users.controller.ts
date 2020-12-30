@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Controller, Post, Body, UseGuards, Request, HttpCode, Get, Query, Put, Param } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, HttpCode, Get, Query, Put, Param, Delete } from '@nestjs/common';
 import { RegisterDto } from './models/dtos/register.dto';
 import { UsersService } from './users.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -127,7 +127,23 @@ export class UsersController {
     type: UserResponseDto,
   })
   @CustomApiUnauthorizedResponse()
-  healthcheck() {
+  healthcheck(): string {
     return 'Not expired';
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete the given userId',
+    description: 'Validate that the JWT Token is not expired.',
+  })
+  @ApiOkResponse({
+    description: 'The token is valid',
+    type: UserResponseDto,
+  })
+  @CustomApiUnauthorizedResponse()
+  deleteUser(): Promise<void> {
+    return null;
   }
 }

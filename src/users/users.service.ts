@@ -157,4 +157,18 @@ export class UsersService {
     const salt = await bcrypt.genSalt(+this.configService.get<number>('BCRYPT_ROUND'));
     return await bcrypt.hash(plainPassword, salt);
   }
+
+  async deleteUser(userId: string): Promise<void> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      ThrowExceptionUtils.notFoundException(this.entityType, userId);
+    }
+    //Delete the user
+
+    //Delete the accountSettings of that user
+    //Delete all the mounts of that user
+    //Delete all the couplings of that user
+
+    return null;
+  }
 }
