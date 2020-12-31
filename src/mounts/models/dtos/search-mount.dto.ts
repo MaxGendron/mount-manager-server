@@ -42,4 +42,8 @@ export class SearchMountDto {
   @IsOptional()
   @ApiProperty({ required: false })
   hasNoChild: boolean;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  limit: number;
 }

@@ -7,10 +7,12 @@ import { CreateCouplingDto } from './models/dtos/create-coupling.dto';
 import { Coupling } from './models/schemas/coupling.schema';
 import { SearchCouplingDto } from './models/dtos/search-coupling.dto';
 import { MountGenderEnum } from '../models/enum/mount-gender.enum';
+import { GetCouplingsResponseDto } from './models/dtos/responses/get-couplings.response.dto';
 
 @Injectable()
 export class CouplingsService {
   private readonly entityType = 'Coupling';
+  private readonly queryLimit = 20;
 
   constructor(
     @InjectModel(Coupling.name) private couplingModel: Model<Coupling>,
@@ -63,10 +65,12 @@ export class CouplingsService {
     await this.couplingModel.findByIdAndRemove(couplingId).exec();
   }
 
-  async getCouplingsForUserId(searchCouplingDto: SearchCouplingDto, userId: string): Promise<Coupling[]> {
+  async getCouplingsForUserId(searchCouplingDto: SearchCouplingDto, userId: string): Promise<GetCouplingsResponseDto> {
     const query = await this.createSearchQuery(searchCouplingDto);
+    const limit = searchCouplingDto.limit ?? this.queryLimit;
 
-    return this.couplingModel
+    //Get the couplings item
+    const couplings = await this.couplingModel
       .aggregate([
         {
           $match: {
@@ -74,11 +78,44 @@ export class CouplingsService {
             $and: query,
           },
         },
+        {
+          $facet: {
+            totalCount: [
+              {
+                $count: 'value',
+              },
+            ],
+            couplings: [
+              {
+                $limit: +limit,
+              },
+            ],
+          },
+        },
+        {
+          $unwind: {
+            path: '$totalCount',
+            preserveNullAndEmptyArrays: false,
+          },
+        },
+        {
+          $addFields: {
+            totalCount: '$totalCount.value',
+          },
+        },
       ])
       .exec();
+
+    if (couplings && couplings.length > 0) {
+      return couplings[0];
+    }
+    const response = new GetCouplingsResponseDto();
+    response.totalCount = 0;
+    response.couplings = [];
+    return response;
   }
 
-  private async createSearchQuery(searchCouplingDto: SearchCouplingDto) {
+  private async createSearchQuery(searchCouplingDto: SearchCouplingDto): Promise<any> {
     // eslint-disable-next-line prefer-const
     let query = [];
 

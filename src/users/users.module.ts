@@ -1,3 +1,4 @@
+import { AccountSettings, AccountSettingSchema } from './../accounts-settings/models/schemas/account-settings.schema';
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -9,10 +10,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LocalStrategy } from './strategy/local.strategy';
 import { AccountSettingsModule } from 'src/accounts-settings/accounts-settings.module';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import { Mount, MountSchema } from 'src/mounts/models/schemas/mount.schema';
+import { Coupling, CouplingSchema } from 'src/mounts/couplings/models/schemas/coupling.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: AccountSettings.name, schema: AccountSettingSchema },
+      { name: Mount.name, schema: MountSchema },
+      { name: Coupling.name, schema: CouplingSchema },
+    ]),
     AccountSettingsModule,
     PassportModule,
     JwtModule.registerAsync({

@@ -13,10 +13,12 @@ import { Mount } from './models/schemas/mount.schema';
 import { MountColorsService } from './mount-colors/mount-colors.service';
 import { SortOrderEnum } from 'src/common/models/enum/sort-order.enum';
 import { MountTypeEnum } from './models/enum/mount-type.enum';
+import { GetMountsResponseDto } from './models/dtos/responses/get-mounts-response.dto';
 
 @Injectable()
 export class MountsService {
   private readonly entityType = 'Mount';
+  private readonly queryLimit = 20;
 
   constructor(
     @InjectModel(Mount.name) private mountModel: Model<Mount>,
@@ -90,14 +92,15 @@ export class MountsService {
   Get the list of mounts associated to a userId
   Filter/sort if needed. Default sorting is name ASC
   */
-  async getMountsForUserId(searchMountDto: SearchMountDto, userId: string): Promise<Mount[]> {
+  async getMountsForUserId(searchMountDto: SearchMountDto, userId: string): Promise<GetMountsResponseDto> {
     const query = await this.createSearchQuery(searchMountDto);
 
     //Set sort
     const sortField = searchMountDto.sortField ?? MountSortFieldEnum.Name;
     const sortOrder = +(searchMountDto.sortOrder ?? SortOrderEnum.Asc);
+    const limit = searchMountDto.limit ?? this.queryLimit;
 
-    return this.mountModel
+    const mounts = await this.mountModel
       .aggregate([
         {
           $match: {
@@ -110,8 +113,41 @@ export class MountsService {
             [sortField]: sortOrder,
           },
         },
+        {
+          $facet: {
+            totalCount: [
+              {
+                $count: 'value',
+              },
+            ],
+            mounts: [
+              {
+                $limit: +limit,
+              },
+            ],
+          },
+        },
+        {
+          $unwind: {
+            path: '$totalCount',
+            preserveNullAndEmptyArrays: false,
+          },
+        },
+        {
+          $addFields: {
+            totalCount: '$totalCount.value',
+          },
+        },
       ])
       .exec();
+
+    if (mounts && mounts.length > 0) {
+      return mounts[0];
+    }
+    const response = new GetMountsResponseDto();
+    response.totalCount = 0;
+    response.mounts = [];
+    return response;
   }
 
   /*
@@ -247,7 +283,7 @@ export class MountsService {
         isValid = maxNumberOfChild <= 4 && maxNumberOfChild >= 2;
         break;
       case MountTypeEnum.Volkorne:
-        isValid = maxNumberOfChild == 2;
+        isValid = maxNumberOfChild == 1 || maxNumberOfChild == 2;
         break;
     }
     if (!isValid) {

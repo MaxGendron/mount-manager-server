@@ -1,3 +1,4 @@
+import { GetCouplingsResponseDto } from './models/dtos/responses/get-couplings.response.dto';
 import { SearchCouplingDto } from './models/dtos/search-coupling.dto';
 import { CouplingsService } from './couplings.service';
 import { Body, Controller, HttpCode, Param, Query, UseGuards } from '@nestjs/common';
@@ -76,7 +77,7 @@ export class CouplingsController {
   getCouplingsForUserId(
     @Query() searchCouplingDto: SearchCouplingDto,
     @User('_id') userId: string,
-  ): Promise<Coupling[]> {
+  ): Promise<GetCouplingsResponseDto> {
     return this.couplingsService.getCouplingsForUserId(searchCouplingDto, userId);
   }
 }
