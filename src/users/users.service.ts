@@ -188,27 +188,33 @@ export class UsersService {
 
     //Delete the accountSettings of that user
     try {
-      await this.accountSettingsModel.deleteMany({
-        userId: new Types.ObjectId(`${userId}`),
-      }).exec();
+      await this.accountSettingsModel
+        .deleteMany({
+          userId: new Types.ObjectId(`${userId}`),
+        })
+        .exec();
     } catch (e) {
       Logger.error(`Error deleting the accountSettings for the userId: ${userId}.`);
     }
 
     //Delete all the mounts of that user
     try {
-      await this.mountModel.deleteMany({
-        userId: new Types.ObjectId(`${userId}`),
-      }).exec();
+      await this.mountModel
+        .deleteMany({
+          userId: new Types.ObjectId(`${userId}`),
+        })
+        .exec();
     } catch (e) {
       Logger.error(`Error deleting the mounts for the userId: ${userId}.`);
     }
 
     //Delete all the couplings of that user
     try {
-      await this.couplingModel.deleteMany({
-        userId: new Types.ObjectId(`${userId}`),
-      }).exec();
+      await this.couplingModel
+        .deleteMany({
+          userId: new Types.ObjectId(`${userId}`),
+        })
+        .exec();
     } catch (e) {
       Logger.error(`Error deleting the coupplings for the userId: ${userId}.`);
     }
