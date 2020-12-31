@@ -1,7 +1,8 @@
+import { AccountSettings } from './../accounts-settings/models/schemas/account-settings.schema';
 import * as bcrypt from 'bcrypt';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User } from './models/schemas/user.schema';
 import { RegisterDto } from './models/dtos/register.dto';
 import { ConfigService } from '@nestjs/config';
@@ -13,6 +14,8 @@ import { AccountSettingsService } from 'src/accounts-settings/accounts-settings.
 import { ThrowExceptionUtils } from 'src/common/utils/throw-exception.utils';
 import { UserResponseDto } from './models/dtos/responses/user.response.dto';
 import { UpdateUserDto } from './models/dtos/update-user.dto';
+import { Mount } from 'src/mounts/models/schemas/mount.schema';
+import { Coupling } from 'src/mounts/couplings/models/schemas/coupling.schema';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +23,9 @@ export class UsersService {
 
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(AccountSettings.name) private accountSettingsModel: Model<AccountSettings>,
+    @InjectModel(Mount.name) private mountModel: Model<Mount>,
+    @InjectModel(Coupling.name) private couplingModel: Model<Coupling>,
     private configService: ConfigService,
     private jwtService: JwtService,
     private accountSettingsService: AccountSettingsService,
@@ -158,17 +164,49 @@ export class UsersService {
     return await bcrypt.hash(plainPassword, salt);
   }
 
-  async deleteUser(userId: string): Promise<void> {
-    const user = await this.userModel.findById(userId).exec();
-    if (!user) {
-      ThrowExceptionUtils.notFoundException(this.entityType, userId);
+  /* Delete the user & everything related to that Id.
+  "userId" is the _id of the user to delete and "requester" is the auth user of the request.
+  Only throw an error if we cannot delete from the users table, otherwise
+  we only log it, it's just stuff in the DB but doesn't impact the app. */
+  async deleteUser(userId: string, authUser: User): Promise<void> {
+    //Throw an error if the authUser._id isn't the same as the given userId
+    //and if the authUser isn't an admin (admin can delete everything)
+    if (userId != authUser._id && authUser.role != UserRoleEnum.Admin) {
+      ThrowExceptionUtils.forbidden();
     }
+
     //Delete the user
+    const user = await this.userModel.findByIdAndRemove(userId).exec();
+    if (!user) {
+      console.log('notfound');
+      //ThrowExceptionUtils.notFoundException(this.entityType, userId);
+    }
 
     //Delete the accountSettings of that user
-    //Delete all the mounts of that user
-    //Delete all the couplings of that user
+    try {
+      await this.accountSettingsModel.deleteMany({
+        userId: new Types.ObjectId(`${userId}`),
+      }).exec();
+    } catch (e) {
+      Logger.error(`Error deleting the accountSettings for the userId: ${userId}.`);
+    }
 
-    return null;
+    //Delete all the mounts of that user
+    try {
+      await this.mountModel.deleteMany({
+        userId: new Types.ObjectId(`${userId}`),
+      }).exec();
+    } catch (e) {
+      Logger.error(`Error deleting the mounts for the userId: ${userId}.`);
+    }
+
+    //Delete all the couplings of that user
+    try {
+      await this.couplingModel.deleteMany({
+        userId: new Types.ObjectId(`${userId}`),
+      }).exec();
+    } catch (e) {
+      Logger.error(`Error deleting the coupplings for the userId: ${userId}.`);
+    }
   }
 }

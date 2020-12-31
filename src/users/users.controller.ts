@@ -4,7 +4,15 @@ import { RegisterDto } from './models/dtos/register.dto';
 import { UsersService } from './users.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginDto } from './models/dtos/login.dto';
-import { ApiTags, ApiBody, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBody,
+  ApiOperation,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiBearerAuth,
+  ApiNoContentResponse,
+} from '@nestjs/swagger';
 import { LoggedUserResponseDto } from './models/dtos/responses/logged-user.response.dto';
 import { ExistReponseDto } from './models/dtos/responses/exist.response.dto';
 import {
@@ -21,6 +29,7 @@ import { User } from 'src/common/models/decorator/user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { MongoIdDto } from 'src/common/models/dtos/mongo-id.dto';
 import { UpdateUserDto } from './models/dtos/update-user.dto';
+import * as UserSchema from './models/schemas/user.schema';
 
 @ApiTags('Users')
 @ApiUnexpectedErrorResponse()
@@ -134,16 +143,20 @@ export class UsersController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
+  @HttpCode(204)
   @ApiOperation({
-    summary: 'Delete the given userId',
-    description: 'Validate that the JWT Token is not expired.',
+    summary: 'Delete the given userId - Cascade Delete',
+    description:
+      "Delete everything related to the given userId. Only delete if the user is the same as the one requesting it or if admin.Will only throw an error if there's problem delete the entry in the users table.",
   })
-  @ApiOkResponse({
-    description: 'The token is valid',
-    type: UserResponseDto,
+  @ApiNoContentResponse({
+    description: 'The user has been deleted.',
   })
+  @CustomApiBadRequestResponse()
+  @CustomApiNotFoundResponse('No user found.')
   @CustomApiUnauthorizedResponse()
-  deleteUser(): Promise<void> {
-    return null;
+  @CustomApiForbiddenResponse()
+  async deleteUser(@Param() mongoIdDto: MongoIdDto, @User() user: UserSchema.User): Promise<void> {
+    await this.usersService.deleteUser(mongoIdDto.id, user);
   }
 }
