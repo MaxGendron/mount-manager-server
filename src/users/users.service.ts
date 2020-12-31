@@ -117,7 +117,7 @@ export class UsersService {
   }
 
   //Update the given user with passed values
-  async updateUser(id: string, updateUserDto: UpdateUserDto, userId: string): Promise<UserResponseDto> {
+  async updateUser(id: string, updateUserDto: UpdateUserDto, authUser: User): Promise<UserResponseDto> {
     let countQuery: any;
     //Set the query accordingly with what is requested to be updated
     if (updateUserDto.username != null && updateUserDto.email != null) {
@@ -143,14 +143,19 @@ export class UsersService {
     if (!user) {
       ThrowExceptionUtils.notFoundException(this.entityType, id);
     }
-    //If the user who requested isn't the same as the one returned, throw exception
-    if (user._id != userId) {
+    //If the user who requested isn't the same as the one returned and if it's not an admin, throw exception
+    if (user._id != authUser._id && authUser.role != UserRoleEnum.Admin) {
       ThrowExceptionUtils.forbidden();
     }
 
     //If the password is being updated, need to hash it
     if (updateUserDto.password != null) {
       updateUserDto.password = await this.hashPassword(updateUserDto.password);
+    }
+
+    //Set the role to user if the requester isn't admin, we don't want user to set their own role
+    if (updateUserDto.role != null && authUser.role != UserRoleEnum.Admin) {
+      updateUserDto.role = user.role;
     }
 
     const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });

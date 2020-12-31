@@ -119,9 +119,9 @@ export class UsersController {
   updateAccountSetting(
     @Param() mongoIdDto: MongoIdDto,
     @Body() updateUserDto: UpdateUserDto,
-    @User('_id') userId: string,
+    @User() user: UserSchema.User,
   ): Promise<UserResponseDto> {
-    return this.usersService.updateUser(mongoIdDto.id, updateUserDto, userId);
+    return this.usersService.updateUser(mongoIdDto.id, updateUserDto, user);
   }
 
   @ApiBearerAuth()
