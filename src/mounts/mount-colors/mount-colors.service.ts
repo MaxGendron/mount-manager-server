@@ -33,7 +33,6 @@ export class MountColorsService {
     if (!mountColor) {
       ThrowExceptionUtils.notFoundException(this.entityType, mountColorId);
     }
-    return mountColor;
   }
 
   //Get all the mountColors grouped by mountType
