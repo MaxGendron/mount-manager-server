@@ -183,8 +183,7 @@ export class UsersService {
     //Delete the user
     const user = await this.userModel.findByIdAndRemove(userId).exec();
     if (!user) {
-      console.log('notfound');
-      //ThrowExceptionUtils.notFoundException(this.entityType, userId);
+      ThrowExceptionUtils.notFoundException(this.entityType, userId);
     }
 
     //Delete the accountSettings of that user
