@@ -147,7 +147,7 @@ export class UsersController {
   @ApiOperation({
     summary: 'Delete the given userId - Cascade Delete',
     description:
-      "Delete everything related to the given userId. Only delete if the user is the same as the one requesting it or if admin.Will only throw an error if there's problem delete the entry in the users table.",
+      "Delete everything related to the given userId. Only delete if the user is the same as the one requesting it or if admin. Will only throw an error if there's problem deleting the entry in the users table.",
   })
   @ApiNoContentResponse({
     description: 'The user has been deleted.',

@@ -11,4 +11,7 @@ export class UpdateAccountSettingsDto {
   @IsEnum(MountTypeEnum, { each: true })
   @IsOptional()
   mountTypes: MountTypeEnum[];
+
+  @IsOptional()
+  autocompleteName: boolean;
 }
