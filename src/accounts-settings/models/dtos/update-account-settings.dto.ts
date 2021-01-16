@@ -13,5 +13,5 @@ export class UpdateAccountSettingsDto {
   mountTypes: MountTypeEnum[];
 
   @IsOptional()
-  autocompleteName: boolean;
+  autoFillChildName: boolean;
 }

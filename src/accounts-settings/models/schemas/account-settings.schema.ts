@@ -24,7 +24,7 @@ export class AccountSettings extends BaseDocument {
 
   @ApiProperty()
   @Prop()
-  autocompleteName: boolean;
+  autoFillChildName: boolean;
 }
 
 export const AccountSettingSchema = SchemaFactory.createForClass(AccountSettings);
