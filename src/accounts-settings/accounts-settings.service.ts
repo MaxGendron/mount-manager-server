@@ -60,11 +60,12 @@ export class AccountSettingsService {
     return accountSettings;
   }
 
-  //Create a new accountSettings with only userId & mountTypes
+  //Create a new accountSettings with only userId & mountTypes & autoFillChildName to false
   async createNewAccountSettings(userId: string, mountTypes: MountTypeEnum[]): Promise<AccountSettings> {
     const newAccountSettings = new this.accountSettingsModel();
     newAccountSettings.userId = userId;
     newAccountSettings.mountTypes = mountTypes;
+    newAccountSettings.autoFillChildName = false;
     return newAccountSettings.save();
   }
 

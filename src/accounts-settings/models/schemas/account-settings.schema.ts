@@ -21,6 +21,10 @@ export class AccountSettings extends BaseDocument {
   @ApiProperty()
   @Prop([String])
   mountTypes: MountTypeEnum[];
+
+  @ApiProperty()
+  @Prop()
+  autoFillChildName: boolean;
 }
 
 export const AccountSettingSchema = SchemaFactory.createForClass(AccountSettings);
