@@ -15,7 +15,6 @@ async function bootstrap() {
     //Check if the origin is in the list of cors defined in the
     //env, if so let it pass otherwise return a error
     origin: function(origin, callback) {
-      console.log(origin);
       const cors_origin = app.get('ConfigService').get('CORS_ORIGIN');
       if (cors_origin.indexOf(origin) !== -1) {
         callback(null, true);
