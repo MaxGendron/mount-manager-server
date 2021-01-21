@@ -50,7 +50,7 @@ export class UsersService {
 
     //Save the user
     const newUser = new this.userModel(registerDto);
-    newUser.role = newUser.role ?? UserRoleEnum.User;
+    newUser.role = UserRoleEnum.User;
     newUser.save();
 
     //Create a empty accountSettings with only userId & mountTypes & autoFillChildName to false
