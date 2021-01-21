@@ -7,10 +7,15 @@ import { AccountSettingsModule } from './accounts-settings/accounts-settings.mod
 import { MountsModule } from './mounts/mounts.module';
 import { MountColorsModule } from './mounts/mount-colors/mount-colors.module';
 import { CouplingsModule } from './mounts/couplings/couplings.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
