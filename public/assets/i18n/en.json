@@ -1,0 +1,139 @@
+{
+  "error": {
+    "userNotfound": "Cannot find your account, please check your credentials and try again",
+    "unexpected": "An unexpected error occured, please try again",
+    "matchPassword": "The passwords doesn't match",
+    "allFields": "Please fill all the fields",
+    "required": "{{input}} is required",
+    "invalidEmail": "Email isn't in a valid format",
+    "accountExist": "Email address or username is already taken, please try again",
+    "emailExist": "The specified email adress already exist",
+    "usernameExist": "The specified username already exist",
+    "unexpectedUpdate": "An unexpected error occured when updating \"{{field}}\", please try again",
+    "updateEmpty": "Cannot update this field with empty value",
+    "unexpectedPleaseRefresh": "An unexpected error occured, please refresh the page",
+    "sameGender": "Cannot add the same gender",
+    "notSameType": "Mount types aren't the same",
+    "valueBetween": "Value must be between {{min}} and {{max}}",
+    "maxNumberOfChild": "One mount has hit the limit of the number children."
+  },
+  "button": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "changePassword": "Change password",
+    "addMount": "Add a mount",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "dontDelete": "Don't delete",
+    "filter": "Filter",
+    "yes": "Yes",
+    "no": "No",
+    "viewMore": "View more",
+    "deleteAccount": "Delete the account"
+  },
+  "form": {
+    "username": "Username",
+    "email": "Email",
+    "usernameOrEmail": "Username or email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "mountTypes": "Mount types in the breeding",
+    "igUsername": "In game username",
+    "serverName": "Server name",
+    "optional": "Optional",
+    "name": "Name",
+    "gender": "Gender",
+    "mountType": "Mount type",
+    "color": "Color",
+    "sortField": "Sort by",
+    "sortOrder": "Sort order",
+    "fatherName": "Father name",
+    "motherName": "Mother name",
+    "childName": "Child name",
+    "maxNumberOfChild": "Max number of child",
+    "hasMaxedChild": "Maximum children",
+    "hasNoChild": "No children",
+    "autoFillChildName": "Automatically fill the child's name"
+  },
+  "login": {
+    "title": "Login",
+    "registerText": "Don't have an account with us yet? Register now to have access to all the features!"
+  },
+  "navbar": {
+    "account": "My account",
+    "mounts": "My mounts",
+    "bulkAdd": "Add multiple mounts",
+    "home": "Home",
+    "githubTooltip": "See my other projects here",
+    "discordTooltip": "Contact me: {{username}}"
+  },
+  "register": {
+    "title": "Register"
+  },
+  "myAccount": {
+    "title": "My Account",
+    "accountInfo": "Account Info",
+    "updated": "{{field}} updated!",
+    "showPassword": "Show password fields",
+    "hidePassword": "Hide password fields",
+    "accountSettings": "Account Settings",
+    "deleteConfirmation": "Do you really want to delete your account? This action is irreversible and all your data will be lost."
+  },
+  "mountTypeEnum": {
+    "Dragodinde": "Dragoturkey",
+    "Volkorne": "Rhineetle",
+    "Muldo": "Seemyool"
+  },
+  "mountGenderEnum": {
+    "Female": "Female",
+    "Male": "Male"
+  },
+  "sortOrderEnum": {
+    "Asc": "Ascending",
+    "Desc": "Descending"
+  },
+  "mountSortFieldEnum": {
+    "Name": "Name",
+    "Gender": "Gender",
+    "Type": "Mount type"
+  },
+  "myMounts": {
+    "title": "My mounts",
+    "mountDeleteConfirmation": "Do you want to delete this mount?",
+    "couplingDeleteConfirmation": "Do you want to delete this coupling?",
+    "numberMount": "Number of mounts",
+    "couplingTitle": "My couplings",
+    "breedingTooltip": "Mate this mount",
+    "createCouplingTitle": "Create a coupling",
+    "total": "Total"
+  },
+  "addOrUpdateMount": {
+    "titleUpdate": "Update {{name}}",
+    "titleCreate": "Add a new mount"
+  },
+  "bulkAdd": {
+    "title": "Add mounts",
+    "subtitle": "Use this page to create multiple mounts at the same time",
+    "addRow": "Add row",
+    "success": "The mounts have been created, do you wanna go to \"My mounts\" page? Otherwise you'll stay on this one."
+  },
+  "index": {
+    "title": "Welcome to {{appName}} !",
+    "description": "{{appName}} allows you to manage your breeding by keeping track of your mounts and couplings while offering a speed of research non-existent in Dofus.",
+    "featureTitle": "Feature implemented:",
+    "feature1": "Decide which types of mounts are in your breeding",
+    "feature2": "Manage mounts & couplings",
+    "feature3": "Filter / search mounts & couplings",
+    "feature4": "Automatically pre-filled children name based on parents name when coupling (configurable)",
+    "feature5": "Number of mounts in breeding grouped by type",
+    "futureTitle": "Future feature planned (maybe):",
+    "future1": "Income/Expenditure to calculate efficiency of your breeding",
+    "future2": "Some kind of trading mechanism with users of your server",
+    "future3": "More things maybe? Who knows 😶"
+  },
+  "footer": {
+    "copyright": "© {{years}} Dofus Mount Manager. Some illustrations are the property of Ankama Studio and Dofus - All rights reserved."
+  }
+}

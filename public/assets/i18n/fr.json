@@ -1,0 +1,139 @@
+{
+  "error": {
+    "userNotfound": "Impossible de trouver votre compte, vérifiez vos informations d'identification et réessayez",
+    "unexpected": "Une erreur inattendue c'est produite, veuillez réessayer",
+    "matchPassword": "Les mots de passe ne correspondent pas",
+    "allFields": "Veuillez remplir tout les champs",
+    "required": "{{input}} is required",
+    "invalidEmail": "L'adresse courriel n'est pas dans un format valide",
+    "accountExist": "L'adresse courriel ou le nom de compte est déjà pris, veuillez réessayer",
+    "emailExist": "L'adresse courriel spécifié existe déjà",
+    "usernameExist": "Le nom d'utilisateur spécifié existe déjà",
+    "unexpectedUpdate": "Une erreur inattendue c'est produite en mettant a jour \"{{field}}\", veuillez réessayer",
+    "updateEmpty": "Impossible de mettre à jour ce champ avec aucune valeur",
+    "unexpectedPleaseRefresh": "Une erreur inattendue c'est produite, veuillez rechargez la page",
+    "sameGender": "Impossible d'ajouter le même sexe",
+    "notSameType": "Les types de montures ne sont pas les mêmes",
+    "valueBetween": "La valeur doit être entre {{min}} et {{max}}",
+    "maxNumberOfChild": "Une monture a atteint la limite du nombre d'enfants."
+  },
+  "button": {
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "register": "S'inscrire",
+    "changePassword": "Changer le mot de passe",
+    "addMount": "Ajouter une monture",
+    "create": "Créer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "dontDelete": "Ne pas supprimer",
+    "filter": "Filtrer",
+    "yes": "Oui",
+    "no": "Non",
+    "viewMore": "Voir plus",
+    "deleteAccount": "Supprimer le compte"
+  },
+  "form": {
+    "username": "Nom de compte",
+    "email": "Adresse courriel",
+    "usernameOrEmail": "Nom de compte ou address courriel",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmation du mot de passe",
+    "mountTypes": "Type de montures dans l'élevage",
+    "igUsername": "Pseudo en jeu",
+    "serverName": "Nom du serveur",
+    "optional": "Optionnel",
+    "name": "Nom",
+    "gender": "Sexe",
+    "mountType": "Type de monture",
+    "color": "Couleur",
+    "sortField": "Trier par",
+    "sortOrder": "Ordre de tri",
+    "fatherName": "Nom du père",
+    "motherName": "Nom de la mère",
+    "childName": "Nom de l'enfant",
+    "maxNumberOfChild": "Nombre maximum d'enfant",
+    "hasMaxedChild": "Maximum d'enfants",
+    "hasNoChild": "Pas d'enfants",
+    "autoFillChildName": "Remplir automatiquement le nom de l'enfant"
+  },
+  "login": {
+    "title": "Connexion",
+    "registerText": "Pas encore de compte avec nous? Inscrivez vous maintenant pour profiter de toute les fonctionnalités!"
+  },
+  "navbar": {
+    "account": "Mon compte",
+    "mounts": "Mes montures",
+    "bulkAdd": "Ajouter plusieurs montures",
+    "home": "Accueil",
+    "githubTooltip": "Voir mes autres projets ici",
+    "discordTooltip": "Contactez-moi: {{username}}"
+  },
+  "register": {
+    "title": "Inscription"
+  },
+  "myAccount": {
+    "title": "Mon compte",
+    "accountInfo": "Information du compte",
+    "updated": "{{field}} actualisé!",
+    "showPassword": "Afficher les champs de mot de passe",
+    "hidePassword": "Cacher les champs de mot de passe",
+    "accountSettings": "Paramètres du compte",
+    "deleteConfirmation": "Voulez-vous vraiment supprimer votre compte? Cette action est irréversible et toutes vos données seront perdues."
+  },
+  "mountTypeEnum": {
+    "Dragodinde": "Dragodinde",
+    "Volkorne": "Volkorne",
+    "Muldo": "Muldo"
+  },
+  "mountGenderEnum": {
+    "Female": "Femelle",
+    "Male": "Male"
+  },
+  "sortOrderEnum": {
+    "Asc": "Ascending",
+    "Desc": "Descending"
+  },
+  "mountSortFieldEnum": {
+    "Name": "Nom",
+    "Gender": "Sexe",
+    "Type": "Type de monture"
+  },
+  "myMounts": {
+    "title": "Mes montures",
+    "mountDeleteConfirmation": "Voulez-vous supprimer cette monture?",
+    "couplingDeleteConfirmation": "Voulez-vous supprimer cet accouplement?",
+    "numberMount": "Nombre de montures",
+    "couplingTitle": "Mes accouplements",
+    "breedingTooltip": "Accoupler cette monture",
+    "createCouplingTitle": "Créer un accouplement",
+    "total": "Total"
+  },
+  "addOrUpdateMount": {
+    "titleUpdate": "Modifier {{name}}",
+    "titleCreate": "Ajouter une nouvelle monture"
+  },
+  "bulkAdd": {
+    "title": "Ajouter des montures",
+    "subtitle": "Utilisez cette page pour créer plusieurs montures en même temps",
+    "addRow": "Ajouter une rangée",
+    "success": "Les montures ont été créées, voulez-vous aller à la page \"Mes montures\"? Sinon, vous resterez sur celle-ci."
+  },
+  "index": {
+    "title": "Bienvenue sur {{appName}} !",
+    "description": "{{appName}} vous permet de gérer votre élevage en gardant une trace de vos montures et accouplements tout en offrant une rapidité de recherche inexistante dans Dofus.",
+    "featureTitle": "Fonctionnalité implémentée:",
+    "feature1": "Décidez quels types de montures de votre élevage",
+    "feature2": "Gérer les montures et les accouplements",
+    "feature3": "Filtrer / rechercher des montures et des accouplements",
+    "feature4": "Nom de l'enfant pré-rempli automatiquement en fonction du nom des parents lors de l'accouplement (configurable)",
+    "feature5": "Nombre de montures dans l'élevage regroupées par type",
+    "futureTitle": "Fonctionnalité future prévue (peut-être):",
+    "future1": "Revenus / Dépenses pour calculer l'efficacité de votre élevage",
+    "future2": "Un mécanisme d'échange avec les utilisateurs de votre serveur",
+    "future3": "Plus de choses peut-être? Qui sait 😶"
+  },
+  "footer": {
+    "copyright": "© {{years}} Mount Manager. Certaines illustrations sont la propriété d'Ankama Studio et de Dofus - Tous droits réservés."
+  }
+}
