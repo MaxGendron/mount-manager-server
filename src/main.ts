@@ -10,6 +10,7 @@ import { MongoExceptionFilter } from './common/providers/mongo-exception.filter'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = +app.get('ConfigService').get('PORT');
+  const env = app.get('ConfigService').get('ENV');
 
   const corsOptions = {
     //Check if the origin is in the list of cors defined in the
@@ -51,25 +52,26 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors(corsOptions);
 
-  //Swagger
-  const swaggerOptions = new DocumentBuilder()
-    .setTitle('Mount-Manager-Server')
-    .setDescription('Server API of the MountManager application')
-    .setVersion('1.0.0')
-    .addServer(`http://localhost:${port}`, 'Local')
-    .addBearerAuth()
-    .build();
-  const swaggerCustomOptions: SwaggerCustomOptions = {
-    customCssUrl: `http://localhost:${port}/swaggerUICustom.css`,
-    swaggerOptions: {
-      defaultModelsExpandDepth: 0,
-      defaultModelExpandDepth: 0,
-      docExpansion: 'none',
-    },
-  };
-  const document = SwaggerModule.createDocument(app, swaggerOptions);
-  SwaggerModule.setup('api-docs', app, document, swaggerCustomOptions);
-
+  if (env !== 'PROD') {
+    //Swagger
+    const swaggerOptions = new DocumentBuilder()
+      .setTitle('Mount-Manager-Server')
+      .setDescription('Server API of the MountManager application')
+      .setVersion('1.0.0')
+      .addServer(`http://localhost:${port}`, 'Local')
+      .addBearerAuth()
+      .build();
+    const swaggerCustomOptions: SwaggerCustomOptions = {
+      customCssUrl: `http://localhost:${port}/swaggerUICustom.css`,
+      swaggerOptions: {
+        defaultModelsExpandDepth: 0,
+        defaultModelExpandDepth: 0,
+        docExpansion: 'none',
+      },
+    };
+    const document = SwaggerModule.createDocument(app, swaggerOptions);
+    SwaggerModule.setup('api-docs', app, document, swaggerCustomOptions);
+  }
   await app.listen(port);
   Logger.log(`🚀 Server running on http://localhost:${port}`, 'Bootstrap');
 }
