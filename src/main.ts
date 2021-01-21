@@ -1,4 +1,3 @@
-import * as express from 'express';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, ValidationError, HttpStatus, HttpException } from '@nestjs/common';
@@ -51,7 +50,6 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter(), new MongoExceptionFilter());
   app.setGlobalPrefix('api');
   app.enableCors(corsOptions);
-  app.use(express.static('public'));
 
   //Swagger
   const swaggerOptions = new DocumentBuilder()
